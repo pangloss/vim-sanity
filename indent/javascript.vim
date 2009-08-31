@@ -53,7 +53,7 @@ let s:continuation_regex = '\%(\%([\\*+/.:]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\
 
 " Regex that defines continuation lines.
 " TODO: this needs to deal with if ...: and so on
-let s:continuation_regex2 = '\%(\%([\\*+/.:({[]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\)' . s:line_term
+let s:continuation_regex2 = '\%(\%([\\*+/.:([]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\)' . s:line_term
 
 
 " Regex that defines blocks.
@@ -113,12 +113,12 @@ function s:GetMSL(lnum)
     let line = getline(lnum)
     let col = match(line, s:continuation_regex2) + 1
     echom 'back to' lnum 'from' a:lnum ':' getline(lnum)
-    echom '                     continuation regex 2 result:' col s:IsInStringOrComment(lnum, col) s:IsInString(lnum, strlen(line))
+    echom '                     msl regex result:' col s:IsInStringOrComment(lnum, col) s:IsInString(lnum, strlen(line))
     if (col > 0 && !s:IsInStringOrComment(lnum, col)) || s:IsInString(lnum, strlen(line))
-      echom '                     yes'
+      echom '                     yes, msl is' lnum
       let msl = lnum
     else
-      echom '                     no'
+      echom '                     line is not a continuation, return previous msl result'
       break
     endif
     let lnum = s:PrevNonBlankNonString(lnum - 1)
@@ -220,6 +220,7 @@ function GetJavascriptIndent()
 
   " Find a non-blank, non-multi-line string line above the current line.
   let lnum = s:PrevNonBlankNonString(v:lnum - 1)
+  echom '                        prev non blank string:' lnum
 
   " If the line is empty and inside a string, use the previous line.
   if line =~ '^\s*$' && lnum != prevnonblank(v:lnum - 1)
@@ -260,7 +261,7 @@ function GetJavascriptIndent()
       echom 'result' ind + &sw
       return ind + &sw
     else
-      echom '                     previous line had opening bracket d (calling cursor method)'
+      echom '                     previous line had balanced brackets (call cursor method)'
       call cursor(v:lnum, vcol)
     end
   endif
@@ -270,6 +271,7 @@ function GetJavascriptIndent()
 
   " Set up variables to use and search for MSL to the previous line.
   let p_lnum = lnum
+  echom '                      get MSL with' lnum
   let lnum = s:GetMSL(lnum)
 
   " If the previous line wasn't a MSL and is continuation return its indent.
