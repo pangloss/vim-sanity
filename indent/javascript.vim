@@ -46,16 +46,19 @@ let s:syng_stringdoc =
 " Expression used to check whether we should skip a match with searchpair().
 let s:skip_expr = "synIDattr(synID(line('.'),col('.'),1),'name') =~ '".s:syng_strcom."'"
 
+let s:line_term = '\s*\%(\%(\/\/\).*\)\=$'
+
 " Regex that defines continuation lines, not including (, {, or [.
-let s:continuation_regex = '\%([\\*+/.,:]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\s*\%(#.*\)\=$'
+let s:continuation_regex = '\%(\%([\\*+/.,:]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\|\<\%(if\|else\|for\)\>[^{]*\)' . s:line_term
 
 " Regex that defines continuation lines.
 " TODO: this needs to deal with if ...: and so on
-let s:continuation_regex2 = '\%([\\*+/.,:({[]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\s*\%(#.*\)\=$'
+let s:continuation_regex2 = '\%(\%([\\*+/.,:({[]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\|\<\%(if\|else\|for\)\>[^{]*\)' . s:line_term
+
 
 " Regex that defines blocks.
 let s:block_regex =
-      \ '\%({\)\s*\%(|\%([*@]\=\h\w*,\=\s*\)\%(,\s*[*@]\=\h\w*\)*|\)\=\s*\%(#.*\)\=$'
+      \ '\%({\)\s*\%(|\%([*@]\=\h\w*,\=\s*\)\%(,\s*[*@]\=\h\w*\)*|\)\=' . s:line_term
 
 " 2. Auxiliary Functions {{{1
 " ======================
@@ -91,8 +94,7 @@ function s:PrevNonBlankNonString(lnum)
       endif
     elseif !in_block && line =~ '\*/'
       let in_block = 1
-    elseif !in_block && line !~ '^\s*//.*$' && !(s:IsInStringOrComment(lnum, 1)
-	  \ && s:IsInStringOrComment(lnum, strlen(line)))
+    elseif !in_block && line !~ '^\s*\%(//\).*$' && !(s:IsInStringOrComment(lnum, 1) && s:IsInStringOrComment(lnum, strlen(line)))
       break
     endif
     let lnum = prevnonblank(lnum - 1)
@@ -242,13 +244,6 @@ function GetJavascriptIndent()
       call cursor(v:lnum, vcol)
     end
   endif
-
-  " If the previous line ended with an "end", match that "end"s beginning's
-  " indent.
-  let col = s:Match(lnum, '\%(^\|[^.:@$]\)\<end\>\s*\%(#.*\)\=$')
-  if col > 0
-    call cursor(lnum, col)
-  end
 
   " 3.4. Work on the MSL line. {{{2
   " --------------------------
