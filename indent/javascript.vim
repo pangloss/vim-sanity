@@ -203,6 +203,29 @@ function s:IndentWithContinuation(lnum, ind, width)
   return a:ind
 endfunction
 
+function s:OneLineScopeState(lnum)
+  echom '             #### get ols'
+  let prev_line = s:GetMSL(a:lnum, 1)
+  echom '             #### get ols for' a:lnum 'at' prev_line 
+  echom '                        ' getline(prev_line)
+  if prev_line > 0
+    " if the current line is in a one line scope ..
+    if s:Match(prev_line, s:one_line_scope_regex)
+      echom 'the current line is in a one line scope'
+      return -1
+    else
+      let prev_line_msl = s:GetMSL(prev_line, 1)
+      echom '             #### get ols start for' a:lnum 'at' prev_line_msl getline(prev_line_msl)
+      if s:Match(prev_line_msl, s:one_line_scope_regex)
+	echom '             #### found ols start' prev_line_msl
+	return prev_line_msl
+      endif
+    endif
+  endif
+  echom '             #### no ols'
+  return 0
+endfunction
+
 " 3. GetJavascriptIndent Function {{{1
 " =========================
 
@@ -318,27 +341,21 @@ function GetJavascriptIndent()
   " }}}2
   "
   "
-  let prev_line = s:GetMSL(lnum, 1)
-  if prev_line > 0
-    " if the current line is in a one line scope ..
-    if s:Match(prev_line, s:one_line_scope_regex)
-      echom 'the current line is in a one line scope'
-      let ind = ind + &sw
-    else
-      echom 'the current line is not in a one line scope'
-      " see if we need to unravel previous one line scopes
-      let prev_line_msl = prev_line
-      while prev_line_msl > 0
-	let prev_line_msl = s:GetMSL(prev_line_msl, 1)
-	if s:Match(prev_line_msl, s:one_line_scope_regex)
-	  echom 'deindenting'
-	  let ind = ind - &sw
-	else
-	  echom 'done with one line scopes'
-	  break
-	endif
-      endwhile
-    endif
+  echom 'at ols'
+  let ols = s:OneLineScopeState(lnum)
+  echom 'new ols' ols
+  if ols == -1
+    let ind = ind + &sw
+    echom 'ols + 1' ind
+  else
+    while ols != 0
+      if ols > 0
+	let ind = ind - &sw
+	echom 'ols - 1' ind
+      endif
+      let ols = s:OneLineScopeState(ols)
+      echom 'new ols' ols
+    endwhile
   endif
 
 
