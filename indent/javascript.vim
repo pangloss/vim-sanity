@@ -154,17 +154,17 @@ endfunction
 
 function s:IndentWithContinuation(lnum, ind, width)
   " Set up variables to use and search for MSL to the previous line.
-  echom '                      in indent with continuation with' lnum ind
-  let p_lnum = lnum
-  let lnum = s:GetMSL(lnum)
+  echom '                      in indent with continuation with' a:lnum a:ind
+  let p_lnum = a:lnum
+  let lnum = s:GetMSL(a:lnum)
   let line = getline(line)
 
   " If the previous line wasn't a MSL and is continuation return its indent.
   " TODO: the || s:IsInString() thing worries me a bit.
   if p_lnum != lnum
     if s:Match(p_lnum,s:continuation_regex)||s:IsInString(p_lnum,strlen(line))
-      echom '                     no prev MSL but is continuation' ind + width
-      return ind + width
+      echom '                     no prev MSL but is continuation' a:ind + a:width
+      return a:ind + a:width
     endif
   endif
 
@@ -177,16 +177,16 @@ function s:IndentWithContinuation(lnum, ind, width)
   if s:Match(lnum, s:continuation_regex)
     echom '                   matched.'
     if lnum == p_lnum
-      echom '                    extra level a' msl_ind + width
-      return msl_ind + width
+      echom '                    extra level a' msl_ind + a:width
+      return msl_ind + a:width
     else
       echom '                    no extra level b' msl_ind
       return msl_ind
     endif
   endif
 
-  echom '                        returning ind unchanged' ind
-  return ind
+  echom '                        returning ind unchanged' a:ind
+  return a:ind
 endfunction
 
 " 3. GetJavascriptIndent Function {{{1
@@ -297,7 +297,8 @@ function GetJavascriptIndent()
   " --------------------------
 
   echom "                                   ind before continuation" ind
-  let ind = s:IndentWithContinuation(lnum, ind, &sw)
+  let ind_con = ind
+  let ind = s:IndentWithContinuation(lnum, ind_con, &sw)
   echom "                                   ind after continuation" ind
 
   " }}}2
