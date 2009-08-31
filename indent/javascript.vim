@@ -214,7 +214,7 @@ function s:OneLineScopeState(lnum)
       echom 'the current line is in a one line scope'
       return -1
     else
-      let prev_line_msl = s:GetMSL(prev_line, 1)
+      let prev_line_msl = s:GetMSL(prev_line - 1, 1)
       echom '             #### get ols start for' a:lnum 'at' prev_line_msl getline(prev_line_msl)
       if s:Match(prev_line_msl, s:one_line_scope_regex)
 	echom '             #### found ols start' prev_line_msl
