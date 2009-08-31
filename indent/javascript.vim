@@ -56,7 +56,7 @@ let s:continuation_regex = '\%([\\*+/.:]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)' . 
 " TODO: this needs to deal with if ...: and so on
 let s:msl_regex = '\%([\\*+/.:([]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)' . s:line_term
 
-let s:one_line_scope = '\|\<\%(if\|else\|for\)\>[^{]*' . s:line_term
+let s:one_line_scope_regex = '\<\%(if\|else\|for\)\>[^{]*' . s:line_term
 
 " Regex that defines blocks.
 let s:block_regex = '\%({\)\s*\%(|\%([*@]\=\h\w*,\=\s*\)\%(,\s*[*@]\=\h\w*\)*|\)\=' . s:line_term
@@ -113,13 +113,11 @@ function s:GetMSL(lnum)
     " Otherwise, terminate search as we have found our MSL already.
     let line = getline(lnum)
     let col = match(line, s:msl_regex) + 1
-    echom 'back to' lnum 'from' a:lnum ':' getline(lnum)
-    echom '                     msl regex result:' col s:IsInStringOrComment(lnum, col) s:IsInString(lnum, strlen(line))
     if (col > 0 && !s:IsInStringOrComment(lnum, col)) || s:IsInString(lnum, strlen(line))
+      echom 'back to' lnum 'from' msl ':' getline(lnum)
       echom '                     yes, msl is' lnum
       let msl = lnum
     else
-      echom '                     line is not a continuation, return previous msl result'
       break
     endif
     let lnum = s:PrevNonBlankNonString(lnum - 1)
@@ -152,6 +150,43 @@ endfunction
 function s:Match(lnum, regex)
   let col = match(getline(a:lnum), a:regex) + 1
   return col > 0 && !s:IsInStringOrComment(a:lnum, col) ? col : 0
+endfunction
+
+function s:IndentWithContinuation(lnum, ind, width)
+  " Set up variables to use and search for MSL to the previous line.
+  echom '                      in indent with continuation with' lnum ind
+  let p_lnum = lnum
+  let lnum = s:GetMSL(lnum)
+  let line = getline(line)
+
+  " If the previous line wasn't a MSL and is continuation return its indent.
+  " TODO: the || s:IsInString() thing worries me a bit.
+  if p_lnum != lnum
+    if s:Match(p_lnum,s:continuation_regex)||s:IsInString(p_lnum,strlen(line))
+      echom '                     no prev MSL but is continuation' ind + width
+      return ind + width
+    endif
+  endif
+
+  " Set up more variables now that we know we aren't continuation bound.
+  let msl_ind = indent(lnum)
+
+  echom getline(lnum)
+  " If the previous line ended with [*+/.-=], start a continuation that
+  " indents an extra level.
+  if s:Match(lnum, s:continuation_regex)
+    echom '                   matched.'
+    if lnum == p_lnum
+      echom '                    extra level a' msl_ind + width
+      return msl_ind + width
+    else
+      echom '                    no extra level b' msl_ind
+      return msl_ind
+    endif
+  endif
+
+  echom '                        returning ind unchanged' ind
+  return ind
 endfunction
 
 " 3. GetJavascriptIndent Function {{{1
@@ -261,42 +296,18 @@ function GetJavascriptIndent()
   " 3.4. Work on the MSL line. {{{2
   " --------------------------
 
-  " Set up variables to use and search for MSL to the previous line.
-  let p_lnum = lnum
-  echom '                      get MSL with' lnum
-  let lnum = s:GetMSL(lnum)
-
-  " If the previous line wasn't a MSL and is continuation return its indent.
-  " TODO: the || s:IsInString() thing worries me a bit.
-  if p_lnum != lnum
-    if s:Match(p_lnum,s:continuation_regex)||s:IsInString(p_lnum,strlen(line))
-      echom '                     no prev MSL but is continuation'
-      echom 'result' ind
-      return ind
-    endif
-  endif
-
-  " Set up more variables, now that we know we wasn't continuation bound.
-  let line = getline(lnum)
-  let msl_ind = indent(lnum)
-
-
-  echom getline(lnum)
-  " If the previous line ended with [*+/.-=], indent one extra level.
-  if s:Match(lnum, s:continuation_regex)
-    echom '                   matched.'
-    if lnum == p_lnum
-      echom '                    extra level a'
-      let ind = msl_ind + &sw
-    else
-      echom '                    extra level b'
-      let ind = msl_ind
-    endif
-  endif
+  echom "                                   ind before continuation" ind
+  let ind = s:IndentWithContinuation(lnum, ind, &sw)
+  echom "                                   ind after continuation" ind
 
   " }}}2
+  "
+  if s:Match(s:GetMSL(lnum), s:one_line_scope_regex)
+    echom '                    previous msl matched one line scope'
+    let ind = ind + &sw
+  end
 
-  echom 'result' ind
+  echom 'result at end' ind
   return ind
 endfunction
 
