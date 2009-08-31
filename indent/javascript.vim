@@ -49,11 +49,11 @@ let s:skip_expr = "synIDattr(synID(line('.'),col('.'),1),'name') =~ '".s:syng_st
 let s:line_term = '\s*\%(\%(\/\/\).*\)\=$'
 
 " Regex that defines continuation lines, not including (, {, or [.
-let s:continuation_regex = '\%(\%([\\*+/.,:]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\|\<\%(if\|else\|for\)\>[^{]*\)' . s:line_term
+let s:continuation_regex = '\%(\%([\\*+/.:]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\|\<\%(if\|else\|for\)\>[^{]*\)' . s:line_term
 
 " Regex that defines continuation lines.
 " TODO: this needs to deal with if ...: and so on
-let s:continuation_regex2 = '\%(\%([\\*+/.,:({[]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\|\<\%(if\|else\|for\)\>[^{]*\)' . s:line_term
+let s:continuation_regex2 = '\%(\%([\\*+/.:({[]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\)' . s:line_term
 
 
 " Regex that defines blocks.
@@ -112,10 +112,13 @@ function s:GetMSL(lnum)
     " Otherwise, terminate search as we have found our MSL already.
     let line = getline(lnum)
     let col = match(line, s:continuation_regex2) + 1
-    if (col > 0 && !s:IsInStringOrComment(lnum, col))
-	  \ || s:IsInString(lnum, strlen(line))
+    echom 'back to' lnum 'from' a:lnum ':' getline(lnum)
+    echom '                     continuation regex 2 result:' col s:IsInStringOrComment(lnum, col) s:IsInString(lnum, strlen(line))
+    if (col > 0 && !s:IsInStringOrComment(lnum, col)) || s:IsInString(lnum, strlen(line))
+      echom '                     yes'
       let msl = lnum
     else
+      echom '                     no'
       break
     endif
     let lnum = s:PrevNonBlankNonString(lnum - 1)
@@ -163,6 +166,7 @@ endfunction
 " =========================
 
 function GetJavascriptIndent()
+  echom v:lnum '*********************************************************'
   " 3.1. Setup {{{2
   " ----------
 
@@ -176,6 +180,8 @@ function GetJavascriptIndent()
   let line = getline(v:lnum)
   let ind = -1
 
+  echom line
+
   " If we got a closing bracket on an empty line, find its match and indent
   " according to it.  For parentheses we indent to its column - 1, for the
   " others we indent to the containing line's MSL's level.  Return -1 if fail.
@@ -185,21 +191,27 @@ function GetJavascriptIndent()
     let bs = strpart('(){}[]', stridx(')}]', line[col - 1]) * 2, 2)
     if searchpair(escape(bs[0], '\['), '', bs[1], 'bW', s:skip_expr) > 0
       if line[col-1]==')' && col('.') != col('$') - 1
-	let ind = virtcol('.')-1
+        echom '                  closing bracket a'
+        let ind = virtcol('.')-1
       else
-	let ind = indent(s:GetMSL(line('.')))
+        echom '                  closing bracket b'
+        let ind = indent(s:GetMSL(line('.')))
       endif
     endif
+    echom 'result' ind
     return ind
   endif
 
   " If we have a /* or */ set indent to first column.
   if match(line, '^\s*\%(/\*\|\*/\)$') != -1
+    echom '                    in /* or */ '
+    echom 'result 0'
     return 0
   endif
 
   " If we are in a multi-line string or line-comment, don't do anything to it.
   if s:IsInStringOrDocumentation(v:lnum, matchend(line, '^\s*') + 1)
+    echom '                    in string or documentation'
     return indent('.')
   endif
 
@@ -225,6 +237,7 @@ function GetJavascriptIndent()
 
   " If the previous line ended with a block opening, add a level of indent.
   if s:Match(lnum, s:block_regex)
+    echom '             previous line had block opening'
     return indent(s:GetMSL(lnum)) + &sw
   endif
 
@@ -234,13 +247,20 @@ function GetJavascriptIndent()
     let counts = s:LineHasOpeningBrackets(lnum)
     if counts[0] == '1' && searchpair('(', '', ')', 'bW', s:skip_expr) > 0
       if col('.') + 1 == col('$')
-	return ind + &sw
+        echom '                     previous line had opening bracket a'
+        echom 'result' ind + &sw
+        return ind + &sw
       else
-	return virtcol('.')
+        echom '                     previous line had opening bracket b'
+        echom 'result' virtcol('.')
+        return virtcol('.')
       endif
     elseif counts[1] == '1' || counts[2] == '1'
+      echom '                     previous line had opening bracket c'
+      echom 'result' ind + &sw
       return ind + &sw
     else
+      echom '                     previous line had opening bracket d (calling cursor method)'
       call cursor(v:lnum, vcol)
     end
   endif
@@ -256,6 +276,8 @@ function GetJavascriptIndent()
   " TODO: the || s:IsInString() thing worries me a bit.
   if p_lnum != lnum
     if s:Match(p_lnum,s:continuation_regex)||s:IsInString(p_lnum,strlen(line))
+      echom '                     no prev MSL but is continuation'
+      echom 'result' ind
       return ind
     endif
   endif
@@ -265,17 +287,22 @@ function GetJavascriptIndent()
   let msl_ind = indent(lnum)
 
 
+  echom getline(lnum)
   " If the previous line ended with [*+/.-=], indent one extra level.
   if s:Match(lnum, s:continuation_regex)
+    echom '                   matched.'
     if lnum == p_lnum
+      echom '                    extra level a'
       let ind = msl_ind + &sw
     else
+      echom '                    extra level b'
       let ind = msl_ind
     endif
   endif
 
   " }}}2
 
+  echom 'result' ind
   return ind
 endfunction
 
