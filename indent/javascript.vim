@@ -317,17 +317,9 @@ function GetJavascriptIndent()
 
   " }}}2
   "
-  let ols_msl = s:GetMSL(lnum, 0)
-  if s:Match(ols_msl, s:one_line_scope_regex)
+  if s:Match(s:GetMSL(lnum, 0), s:one_line_scope_regex)
     echom '                    previous msl matched one line scope'
     let ind = ind + &sw
-  elseif ols_msl > 0
-    let ols_msl = s:GetMSL(ols_msl, 0)
-    while ols_msl > 0 && s:Match(ols_msl, s:one_line_scope_regex) 
-      let ind = ind - &sw
-      echom '                    ---- deindenting from one line scope to' ind
-      let ols_msl = s:GetMSL(ols_msl, 0)
-    end
   end
 
   echom 'result at end' ind
