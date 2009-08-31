@@ -317,10 +317,61 @@ function GetJavascriptIndent()
 
   " }}}2
   "
-  if s:Match(s:GetMSL(lnum, 0), s:one_line_scope_regex)
-    echom '                    previous msl matched one line scope'
-    let ind = ind + &sw
-  end
+  "
+  let prev_line = s:GetMSL(lnum, 1)
+  if prev_line > 0
+    " if the current line is in a one line scope ..
+    if s:Match(prev_line, s:one_line_scope_regex)
+      echom 'the current line is in a one line scope'
+      let ind = ind + &sw
+    else
+      echom 'the current line is not in a one line scope'
+      " see if we need to unravel previous one line scopes
+      let prev_line_msl = prev_line
+      while prev_line_msl > 0
+	let prev_line_msl = s:GetMSL(prev_line_msl, 1)
+	if s:Match(prev_line_msl, s:one_line_scope_regex)
+	  echom 'deindenting'
+	  let ind = ind - &sw
+	else
+	  echom 'done with one line scopes'
+	  break
+	endif
+      endwhile
+    endif
+  endif
+
+
+
+
+"  let ols_msl = s:GetMSL(lnum, 0)
+"  echom '                     #### ols_msl' ols_msl getline(ols_msl)
+"  if ols_msl > 0
+"    if s:Match(ols_msl, s:one_line_scope_regex)
+"      echom '                    #### previous msl matched one line scope'
+"      let ind = ind + &sw
+"    else
+"      echom '                    #### previous msl did not match one line scope'
+"      let p_ols_msl = ols_msl
+"      echom 'a'
+"      let ols_msl = s:GetMSL(ols_msl, 1)
+"      echom '                     #### ols_msl' ols_msl getline(ols_msl)
+"      echom 'b'
+"      while ols_msl > 0 && p_ols_msl != ols_msl && ind > 0 && s:Match(ols_msl, s:one_line_scope_regex)
+"	echom 'c'
+"	let ind = ind - &sw
+"	echom 'd'
+"	echom '                    #### deindenting from one line scope to' ind
+"	echom 'e'
+"	let p_ols_msl = ols_msl
+"	echom 'f'
+"	let ols_msl = s:GetMSL(ols_msl, 1)
+"	echom 'g'
+"	echom '                     #### ols_msl' ols_msl getline(ols_msl)
+"	echom 'h'
+"      endwhile
+"    endif
+"  endif
 
   echom 'result at end' ind
   return ind
