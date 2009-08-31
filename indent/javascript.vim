@@ -33,6 +33,7 @@ set cpo&vim
 " ============
 
 " Regex of syntax group names that are or delimit string or are comments.
+" TODO: these need to be changed to the values used by the syntax highligter
 let s:syng_strcom = '\<javascript\%(String\|StringEscape\|ASCIICode\|Interpolation\|NoInterpolation\|Comment\|Documentation\)\>'
 
 " Regex of syntax group names that are strings.
@@ -53,12 +54,11 @@ let s:continuation_regex = '\%(\%([\\*+/.:]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\
 
 " Regex that defines continuation lines.
 " TODO: this needs to deal with if ...: and so on
-let s:continuation_regex2 = '\%(\%([\\*+/.:([]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\)' . s:line_term
+let s:msl_regex = '\%(\%([\\*+/.:([]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\|\<\%(if\|else\|for\)\>[^{]*\)' . s:line_term
 
 
 " Regex that defines blocks.
-let s:block_regex =
-      \ '\%({\)\s*\%(|\%([*@]\=\h\w*,\=\s*\)\%(,\s*[*@]\=\h\w*\)*|\)\=' . s:line_term
+let s:block_regex = '\%({\)\s*\%(|\%([*@]\=\h\w*,\=\s*\)\%(,\s*[*@]\=\h\w*\)*|\)\=' . s:line_term
 
 " 2. Auxiliary Functions {{{1
 " ======================
@@ -88,9 +88,9 @@ function s:PrevNonBlankNonString(lnum)
     let line = getline(lnum)
     if line =~ '/\*'
       if in_block
-	let in_block = 0
+        let in_block = 0
       else
-	break
+        break
       endif
     elseif !in_block && line =~ '\*/'
       let in_block = 1
@@ -111,7 +111,7 @@ function s:GetMSL(lnum)
     " If we have a continuation line, or we're in a string, use line as MSL.
     " Otherwise, terminate search as we have found our MSL already.
     let line = getline(lnum)
-    let col = match(line, s:continuation_regex2) + 1
+    let col = match(line, s:msl_regex) + 1
     echom 'back to' lnum 'from' a:lnum ':' getline(lnum)
     echom '                     msl regex result:' col s:IsInStringOrComment(lnum, col) s:IsInString(lnum, strlen(line))
     if (col > 0 && !s:IsInStringOrComment(lnum, col)) || s:IsInString(lnum, strlen(line))
@@ -137,29 +137,20 @@ function s:LineHasOpeningBrackets(lnum)
     if !s:IsInStringOrComment(a:lnum, pos + 1)
       let idx = stridx('(){}[]', line[pos])
       if idx % 2 == 0
-	let open_{idx} = open_{idx} + 1
+        let open_{idx} = open_{idx} + 1
       else
-	let open_{idx - 1} = open_{idx - 1} - 1
+        let open_{idx - 1} = open_{idx - 1} - 1
       endif
     endif
     let pos = match(line, '[][(){}]', pos + 1)
   endwhile
+  echom '                  line has opening brackets' (open_0 > 0) . (open_2 > 0) . (open_4 > 0)
   return (open_0 > 0) . (open_2 > 0) . (open_4 > 0)
 endfunction
 
 function s:Match(lnum, regex)
   let col = match(getline(a:lnum), a:regex) + 1
   return col > 0 && !s:IsInStringOrComment(a:lnum, col) ? col : 0
-endfunction
-
-function s:MatchLast(lnum, regex)
-  let line = getline(a:lnum)
-  let col = match(line, '.*\zs' . a:regex)
-  while col != -1 && s:IsInStringOrComment(a:lnum, col)
-    let line = strpart(line, 0, col)
-    let col = match(line, '.*' . a:regex)
-  endwhile
-  return col + 1
 endfunction
 
 " 3. GetJavascriptIndent Function {{{1
