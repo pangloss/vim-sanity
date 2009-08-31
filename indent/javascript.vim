@@ -29,18 +29,18 @@ function! GetJsIndent()
     let ind = indent(pnum)
     
     if pline =~ '{\s*$\|[\s*$\|(\s*$'
-	let ind = ind + &sw
+      let ind = ind + &sw
     endif
     
     if pline =~ ';\s*$' && line =~ '^\s*}'
         let ind = ind - &sw
     endif
     
-    if pline =~ '\s*]\s*$' && line =~ '^\s*),\s*$'
+    if pline =~ '\s*]\(\s*,\)\?\s*$' && line =~ '^\s*),\s*$'
       let ind = ind - &sw
     endif
 
-    if pline =~ '\s*]\s*$' && line =~ '^\s*}\s*$'
+    if pline =~ '\s*]\(\s*,\)\?\s*$' && line =~ '^\s*}\s*$'
       let ind = ind - &sw
     endif
     
