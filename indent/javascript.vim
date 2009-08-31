@@ -1,88 +1,4 @@
 " Vim indent file
-" Language:	JavaScript
-" Author:	Ryan (ryanthe) Fabella <ryanthe at gmail dot com>
-" URL:		-
-" Last Change:  2007 september 25
-
-if exists('b:did_indent')
-  finish
-endif
-let b:did_indent = 1
-
-setlocal indentexpr=GetJsIndent()
-setlocal indentkeys=0{,0},0),:,!^F,o,O,e,*<Return>,=*/
-" Clean CR when the file is in Unix format
-if &fileformat == "unix" 
-    silent! %s/\r$//g
-endif
-" Only define the functions once per Vim session.
-if exists("*GetJsIndent")
-    finish 
-endif
-function! GetJsIndent()
-    let pnum = prevnonblank(v:lnum - 1)
-    if pnum == 0
-       return 0
-    endif
-    let line = getline(v:lnum)
-    let pline = getline(pnum)
-    let ind = indent(pnum)
-    
-    if pline =~ '{\s*$\|[\s*$\|(\s*$'
-      let ind = ind + &sw
-    endif
-    
-    if pline =~ ';\s*$' && line =~ '^\s*}'
-        let ind = ind - &sw
-    endif
-    
-    if pline =~ '\s*]\(\s*,\)\?\s*$' && line =~ '^\s*),\s*$'
-      let ind = ind - &sw
-    endif
-
-    if pline =~ '\s*]\(\s*,\)\?\s*$' && line =~ '^\s*}\s*$'
-      let ind = ind - &sw
-    endif
-    
-    if line =~ '^\s*});\s*$\|^\s*);\s*$' && pline !~ ';\s*$'
-      let ind = ind - &sw
-    endif
-    
-    if line =~ '^\s*})' && pline =~ '\s*,\s*$'
-      let ind = ind - &sw
-    endif
-    
-    if line =~ '^\s*}();\s*$' && pline =~ '^\s*}\s*$'
-      let ind = ind - &sw
-    endif
-
-    if line =~ '^\s*}),\s*$' 
-      let ind = ind - &sw
-    endif
-
-    if pline =~ '^\s*}\s*$' && line =~ '),\s*$'
-       let ind = ind - &sw
-    endif
-   
-    if pline =~ '^\s*for\s*' && line =~ ')\s*$'
-       let ind = ind + &sw
-    endif
-
-    if line =~ '^\s*}\s*$\|^\s*]\s*$\|\s*},\|\s*]);\s*\|\s*}]\s*$\|\s*};\s*$\|\s*})$\|\s*}).el$' && pline !~ '\s*;\s*$\|\s*]\s*$' && line !~ '^\s*{' && line !~ '\s*{\s*}\s*'
-          let ind = ind - &sw
-    endif
-
-    if pline =~ '^\s*/\*'
-      let ind = ind + 1
-    endif
-
-    if pline =~ '\*/$'
-      let ind = ind - 1
-    endif
-    return ind
-endfunction
-
-" Vim indent file
 " Language:		Javascript
 " Maintainer:		Nikolai Weibull <now at bitwi.se>
 " Info:			$Id: javascript.vim,v 1.47 2008/06/29 04:18:43 tpope Exp $
@@ -104,7 +20,6 @@ setlocal nosmartindent
 " Now, set up our indentation expression and keys that trigger it.
 setlocal indentexpr=GetJavascriptIndent()
 setlocal indentkeys=0{,0},0),0],!^F,o,O,e
-setlocal indentkeys+==end,=elsif,=when,=ensure,=rescue,==begin,==end
 
 " Only define the function once.
 if exists("*GetJavascriptIndent")
@@ -129,43 +44,18 @@ let s:syng_stringdoc =
   \'\<javascript\%(String\|Interpolation\|NoInterpolation\|StringEscape\|Documentation\)\>'
 
 " Expression used to check whether we should skip a match with searchpair().
-let s:skip_expr =
-      \ "synIDattr(synID(line('.'),col('.'),1),'name') =~ '".s:syng_strcom."'"
-
-" Regex used for words that, at the start of a line, add a level of indent.
-let s:javascript_indent_keywords = '^\s*\zs\<\%(module\|class\|def\|if\|for\|while\|until\|else\|elsif\|case\|when\|unless\|begin\|ensure\|rescue\)\>\|\%([*+/,=-]\|<<\|>>\|:\s\)\s*\zs\<\%(if\|for\|while\|until\|case\|unless\|begin\)\>'
-
-" Regex used for words that, at the start of a line, remove a level of indent.
-let s:javascript_deindent_keywords =
-      \ '^\s*\zs\<\%(ensure\|else\|rescue\|elsif\|when\|end\)\>'
-
-" Regex that defines the start-match for the 'end' keyword.
-"let s:end_start_regex = '\%(^\|[^.]\)\<\%(module\|class\|def\|if\|for\|while\|until\|case\|unless\|begin\|do\)\>'
-" TODO: the do here should be restricted somewhat (only at end of line)?
-let s:end_start_regex = '^\s*\zs\<\%(module\|class\|def\|if\|for\|while\|until\|case\|unless\|begin\)\>\|\%([*+/,=-]\|<<\|>>\|:\s\)\s*\zs\<\%(if\|for\|while\|until\|case\|unless\|begin\)\>\|\<do\>'
-
-" Regex that defines the middle-match for the 'end' keyword.
-let s:end_middle_regex = '\<\%(ensure\|else\|\%(\%(^\|;\)\s*\)\@<=\<rescue\>\|when\|elsif\)\>'
-
-" Regex that defines the end-match for the 'end' keyword.
-let s:end_end_regex = '\%(^\|[^.:@$]\)\@<=\<end\>'
-
-" Expression used for searchpair() call for finding match for 'end' keyword.
-let s:end_skip_expr = s:skip_expr .
-      \ ' || (expand("<cword>") == "do"' .
-      \ ' && getline(".") =~ "^\\s*\\<\\(while\\|until\\|for\\)\\>")'
+let s:skip_expr = "synIDattr(synID(line('.'),col('.'),1),'name') =~ '".s:syng_strcom."'"
 
 " Regex that defines continuation lines, not including (, {, or [.
 let s:continuation_regex = '\%([\\*+/.,:]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\s*\%(#.*\)\=$'
 
 " Regex that defines continuation lines.
 " TODO: this needs to deal with if ...: and so on
-let s:continuation_regex2 =
-      \ '\%([\\*+/.,:({[]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\s*\%(#.*\)\=$'
+let s:continuation_regex2 = '\%([\\*+/.,:({[]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)\s*\%(#.*\)\=$'
 
 " Regex that defines blocks.
 let s:block_regex =
-      \ '\%(\<do\>\|{\)\s*\%(|\%([*@]\=\h\w*,\=\s*\)\%(,\s*[*@]\=\h\w*\)*|\)\=\s*\%(#.*\)\=$'
+      \ '\%({\)\s*\%(|\%([*@]\=\h\w*,\=\s*\)\%(,\s*[*@]\=\h\w*\)*|\)\=\s*\%(#.*\)\=$'
 
 " 2. Auxiliary Functions {{{1
 " ======================
@@ -193,15 +83,15 @@ function s:PrevNonBlankNonString(lnum)
     " Go in and out of blocks comments as necessary.
     " If the line isn't empty (with opt. comment) or in a string, end search.
     let line = getline(lnum)
-    if line =~ '^=begin$'
+    if line =~ '/\*'
       if in_block
 	let in_block = 0
       else
 	break
       endif
-    elseif !in_block && line =~ '^=end$'
+    elseif !in_block && line =~ '\*/'
       let in_block = 1
-    elseif !in_block && line !~ '^\s*#.*$' && !(s:IsInStringOrComment(lnum, 1)
+    elseif !in_block && line !~ '^\s*//.*$' && !(s:IsInStringOrComment(lnum, 1)
 	  \ && s:IsInStringOrComment(lnum, strlen(line)))
       break
     endif
@@ -301,26 +191,9 @@ function GetJavascriptIndent()
     return ind
   endif
 
-  " If we have a =begin or =end set indent to first column.
-  if match(line, '^\s*\%(=begin\|=end\)$') != -1
+  " If we have a /* or */ set indent to first column.
+  if match(line, '^\s*\%(/\*\|\*/\)$') != -1
     return 0
-  endif
-
-  " If we have a deindenting keyword, find its match and indent to its level.
-  " TODO: this is messy
-  if s:Match(v:lnum, s:javascript_deindent_keywords)
-    call cursor(v:lnum, 1)
-    if searchpair(s:end_start_regex, s:end_middle_regex, s:end_end_regex, 'bW',
-	    \ s:end_skip_expr) > 0
-      let line = getline('.')
-      if strpart(line, 0, col('.') - 1) =~ '=\s*$' &&
-       \ strpart(line, col('.') - 1, 2) !~ 'do'
-	let ind = virtcol('.') - 1
-      else
-	let ind = indent('.')
-      endif
-    endif
-    return ind
   endif
 
   " If we are in a multi-line string or line-comment, don't do anything to it.
@@ -375,31 +248,7 @@ function GetJavascriptIndent()
   let col = s:Match(lnum, '\%(^\|[^.:@$]\)\<end\>\s*\%(#.*\)\=$')
   if col > 0
     call cursor(lnum, col)
-    if searchpair(s:end_start_regex, '', s:end_end_regex, 'bW',
-		\ s:end_skip_expr) > 0
-      let n = line('.')
-      let ind = indent('.')
-      let msl = s:GetMSL(n)
-      if msl != n
-	let ind = indent(msl)
-      end
-      return ind
-    endif
   end
-
-  let col = s:Match(lnum, s:javascript_indent_keywords)
-  if col > 0
-    call cursor(lnum, col)
-    let ind = virtcol('.') - 1 + &sw
-"    let ind = indent(lnum) + &sw
-    " TODO: make this better (we need to count them) (or, if a searchpair
-    " fails, we know that something is lacking an end and thus we indent a
-    " level
-    if s:Match(lnum, s:end_end_regex)
-      let ind = indent('.')
-    endif
-    return ind
-  endif
 
   " 3.4. Work on the MSL line. {{{2
   " --------------------------
@@ -420,16 +269,6 @@ function GetJavascriptIndent()
   let line = getline(lnum)
   let msl_ind = indent(lnum)
 
-  " If the MSL line had an indenting keyword in it, add a level of indent.
-  " TODO: this does not take into account contrived things such as
-  " module Foo; class Bar; end
-  if s:Match(lnum, s:javascript_indent_keywords)
-    let ind = msl_ind + &sw
-    if s:Match(lnum, s:end_end_regex)
-      let ind = ind - &sw
-    endif
-    return ind
-  endif
 
   " If the previous line ended with [*+/.-=], indent one extra level.
   if s:Match(lnum, s:continuation_regex)
