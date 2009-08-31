@@ -118,8 +118,7 @@ set cpo&vim
 " ============
 
 " Regex of syntax group names that are or delimit string or are comments.
-let s:syng_strcom = '\<javascript\%(String\|StringEscape\|ASCIICode' .
-      \ '\|Interpolation\|NoInterpolation\|Comment\|Documentation\)\>'
+let s:syng_strcom = '\<javascript\%(String\|StringEscape\|ASCIICode\|Interpolation\|NoInterpolation\|Comment\|Documentation\)\>'
 
 " Regex of syntax group names that are strings.
 let s:syng_string =
@@ -134,11 +133,7 @@ let s:skip_expr =
       \ "synIDattr(synID(line('.'),col('.'),1),'name') =~ '".s:syng_strcom."'"
 
 " Regex used for words that, at the start of a line, add a level of indent.
-let s:javascript_indent_keywords = '^\s*\zs\<\%(module\|class\|def\|if\|for' .
-      \ '\|while\|until\|else\|elsif\|case\|when\|unless\|begin\|ensure' .
-      \ '\|rescue\)\>' .
-      \ '\|\%([*+/,=-]\|<<\|>>\|:\s\)\s*\zs' .
-      \    '\<\%(if\|for\|while\|until\|case\|unless\|begin\)\>'
+let s:javascript_indent_keywords = '^\s*\zs\<\%(module\|class\|def\|if\|for\|while\|until\|else\|elsif\|case\|when\|unless\|begin\|ensure\|rescue\)\>\|\%([*+/,=-]\|<<\|>>\|:\s\)\s*\zs\<\%(if\|for\|while\|until\|case\|unless\|begin\)\>'
 
 " Regex used for words that, at the start of a line, remove a level of indent.
 let s:javascript_deindent_keywords =
@@ -147,11 +142,7 @@ let s:javascript_deindent_keywords =
 " Regex that defines the start-match for the 'end' keyword.
 "let s:end_start_regex = '\%(^\|[^.]\)\<\%(module\|class\|def\|if\|for\|while\|until\|case\|unless\|begin\|do\)\>'
 " TODO: the do here should be restricted somewhat (only at end of line)?
-let s:end_start_regex = '^\s*\zs\<\%(module\|class\|def\|if\|for' .
-      \ '\|while\|until\|case\|unless\|begin\)\>' .
-      \ '\|\%([*+/,=-]\|<<\|>>\|:\s\)\s*\zs' .
-      \    '\<\%(if\|for\|while\|until\|case\|unless\|begin\)\>' .
-      \ '\|\<do\>'
+let s:end_start_regex = '^\s*\zs\<\%(module\|class\|def\|if\|for\|while\|until\|case\|unless\|begin\)\>\|\%([*+/,=-]\|<<\|>>\|:\s\)\s*\zs\<\%(if\|for\|while\|until\|case\|unless\|begin\)\>\|\<do\>'
 
 " Regex that defines the middle-match for the 'end' keyword.
 let s:end_middle_regex = '\<\%(ensure\|else\|\%(\%(^\|;\)\s*\)\@<=\<rescue\>\|when\|elsif\)\>'
