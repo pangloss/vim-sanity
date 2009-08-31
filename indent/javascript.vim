@@ -56,7 +56,7 @@ let s:continuation_regex = '\%([\\*+/.:]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)' . 
 " TODO: this needs to deal with if ...: and so on
 let s:msl_regex = '\%([\\*+/.:([]\|\%(<%\)\@<![=-]\|\W[|&?]\|||\|&&\)' . s:line_term
 
-let s:one_line_scope_regex = '\<\%(if\|else\|for\)\>[^{]*' . s:line_term
+let s:one_line_scope_regex = '\<\%(if\|else\|for\|while\)\>[^{]*' . s:line_term
 
 " Regex that defines blocks.
 let s:block_regex = '\%({\)\s*\%(|\%([*@]\=\h\w*,\=\s*\)\%(,\s*[*@]\=\h\w*\)*|\)\=' . s:line_term
@@ -104,7 +104,7 @@ function s:PrevNonBlankNonString(lnum)
 endfunction
 
 " Find line above 'lnum' that started the continuation 'lnum' may be part of.
-function s:GetMSL(lnum)
+function s:GetMSL(lnum, in_one_line_scope)
   " Start on the line we're at and use its indent.
   let msl = a:lnum
   let lnum = s:PrevNonBlankNonString(a:lnum - 1)
@@ -113,12 +113,26 @@ function s:GetMSL(lnum)
     " Otherwise, terminate search as we have found our MSL already.
     let line = getline(lnum)
     let col = match(line, s:msl_regex) + 1
+    echom 'back to' lnum 'from' msl ':' getline(lnum)
     if (col > 0 && !s:IsInStringOrComment(lnum, col)) || s:IsInString(lnum, strlen(line))
-      echom 'back to' lnum 'from' msl ':' getline(lnum)
       echom '                     yes, msl is' lnum
       let msl = lnum
     else
-      break
+      " Don't use lines that are part of a one line scope as msl unless the
+      " flag in_one_line_scope is set to 1
+      "
+      if a:in_one_line_scope 
+	echom '                  **** don''t check for one line scope'
+	break
+      end
+      let msl_one_line = s:Match(lnum, s:one_line_scope_regex)
+      echom '                  **** one line scope regex' msl_one_line
+      if msl_one_line == 0
+	echom '                  **** NOT one line scope' 
+	break
+      else
+	echom '                  **** skip one line scoped msl'
+      endif
     endif
     let lnum = s:PrevNonBlankNonString(lnum - 1)
   endwhile
@@ -154,9 +168,9 @@ endfunction
 
 function s:IndentWithContinuation(lnum, ind, width)
   " Set up variables to use and search for MSL to the previous line.
-  echom '                      in indent with continuation with' a:lnum a:ind
+  echom '                      in indent with continuation with' a:lnum a:ind a:width
   let p_lnum = a:lnum
-  let lnum = s:GetMSL(a:lnum)
+  let lnum = s:GetMSL(a:lnum, 1)
   let line = getline(line)
 
   " If the previous line wasn't a MSL and is continuation return its indent.
@@ -222,7 +236,7 @@ function GetJavascriptIndent()
         let ind = virtcol('.')-1
       else
         echom '                  closing bracket b'
-        let ind = indent(s:GetMSL(line('.')))
+        let ind = indent(s:GetMSL(line('.'), 0))
       endif
     endif
     echom 'result' ind
@@ -266,7 +280,7 @@ function GetJavascriptIndent()
   " If the previous line ended with a block opening, add a level of indent.
   if s:Match(lnum, s:block_regex)
     echom '             previous line had block opening'
-    return indent(s:GetMSL(lnum)) + &sw
+    return indent(s:GetMSL(lnum, 0)) + &sw
   endif
 
   " If the previous line contained an opening bracket, and we are still in it,
@@ -303,9 +317,17 @@ function GetJavascriptIndent()
 
   " }}}2
   "
-  if s:Match(s:GetMSL(lnum), s:one_line_scope_regex)
+  let ols_msl = s:GetMSL(lnum, 0)
+  if s:Match(ols_msl, s:one_line_scope_regex)
     echom '                    previous msl matched one line scope'
     let ind = ind + &sw
+  elseif ols_msl > 0
+    let ols_msl = s:GetMSL(ols_msl, 0)
+    while ols_msl > 0 && s:Match(ols_msl, s:one_line_scope_regex) 
+      let ind = ind - &sw
+      echom '                    ---- deindenting from one line scope to' ind
+      let ols_msl = s:GetMSL(ols_msl, 0)
+    end
   end
 
   echom 'result at end' ind
