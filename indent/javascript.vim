@@ -83,9 +83,9 @@ function! GetJsIndent()
 endfunction
 
 " Vim indent file
-" Language:		Ruby
+" Language:		Javascript
 " Maintainer:		Nikolai Weibull <now at bitwi.se>
-" Info:			$Id: ruby.vim,v 1.47 2008/06/29 04:18:43 tpope Exp $
+" Info:			$Id: javascript.vim,v 1.47 2008/06/29 04:18:43 tpope Exp $
 " URL:			http://vim-ruby.rubyforge.org
 " Anon CVS:		See above site
 " Release Coordinator:	Doug Kearns <dougkearns@gmail.com>
@@ -102,12 +102,12 @@ let b:did_indent = 1
 setlocal nosmartindent
 
 " Now, set up our indentation expression and keys that trigger it.
-setlocal indentexpr=GetRubyIndent()
+setlocal indentexpr=GetJavascriptIndent()
 setlocal indentkeys=0{,0},0),0],!^F,o,O,e
 setlocal indentkeys+==end,=elsif,=when,=ensure,=rescue,==begin,==end
 
 " Only define the function once.
-if exists("*GetRubyIndent")
+if exists("*GetJavascriptIndent")
   finish
 endif
 
@@ -118,30 +118,30 @@ set cpo&vim
 " ============
 
 " Regex of syntax group names that are or delimit string or are comments.
-let s:syng_strcom = '\<ruby\%(String\|StringEscape\|ASCIICode' .
+let s:syng_strcom = '\<javascript\%(String\|StringEscape\|ASCIICode' .
       \ '\|Interpolation\|NoInterpolation\|Comment\|Documentation\)\>'
 
 " Regex of syntax group names that are strings.
 let s:syng_string =
-      \ '\<ruby\%(String\|Interpolation\|NoInterpolation\|StringEscape\)\>'
+      \ '\<javascript\%(String\|Interpolation\|NoInterpolation\|StringEscape\)\>'
 
 " Regex of syntax group names that are strings or documentation.
 let s:syng_stringdoc =
-  \'\<ruby\%(String\|Interpolation\|NoInterpolation\|StringEscape\|Documentation\)\>'
+  \'\<javascript\%(String\|Interpolation\|NoInterpolation\|StringEscape\|Documentation\)\>'
 
 " Expression used to check whether we should skip a match with searchpair().
 let s:skip_expr =
       \ "synIDattr(synID(line('.'),col('.'),1),'name') =~ '".s:syng_strcom."'"
 
 " Regex used for words that, at the start of a line, add a level of indent.
-let s:ruby_indent_keywords = '^\s*\zs\<\%(module\|class\|def\|if\|for' .
+let s:javascript_indent_keywords = '^\s*\zs\<\%(module\|class\|def\|if\|for' .
       \ '\|while\|until\|else\|elsif\|case\|when\|unless\|begin\|ensure' .
       \ '\|rescue\)\>' .
       \ '\|\%([*+/,=-]\|<<\|>>\|:\s\)\s*\zs' .
       \    '\<\%(if\|for\|while\|until\|case\|unless\|begin\)\>'
 
 " Regex used for words that, at the start of a line, remove a level of indent.
-let s:ruby_deindent_keywords =
+let s:javascript_deindent_keywords =
       \ '^\s*\zs\<\%(ensure\|else\|rescue\|elsif\|when\|end\)\>'
 
 " Regex that defines the start-match for the 'end' keyword.
@@ -276,10 +276,10 @@ function s:MatchLast(lnum, regex)
   return col + 1
 endfunction
 
-" 3. GetRubyIndent Function {{{1
+" 3. GetJavascriptIndent Function {{{1
 " =========================
 
-function GetRubyIndent()
+function GetJavascriptIndent()
   " 3.1. Setup {{{2
   " ----------
 
@@ -317,7 +317,7 @@ function GetRubyIndent()
 
   " If we have a deindenting keyword, find its match and indent to its level.
   " TODO: this is messy
-  if s:Match(v:lnum, s:ruby_deindent_keywords)
+  if s:Match(v:lnum, s:javascript_deindent_keywords)
     call cursor(v:lnum, 1)
     if searchpair(s:end_start_regex, s:end_middle_regex, s:end_end_regex, 'bW',
 	    \ s:end_skip_expr) > 0
@@ -396,7 +396,7 @@ function GetRubyIndent()
     endif
   end
 
-  let col = s:Match(lnum, s:ruby_indent_keywords)
+  let col = s:Match(lnum, s:javascript_indent_keywords)
   if col > 0
     call cursor(lnum, col)
     let ind = virtcol('.') - 1 + &sw
@@ -432,7 +432,7 @@ function GetRubyIndent()
   " If the MSL line had an indenting keyword in it, add a level of indent.
   " TODO: this does not take into account contrived things such as
   " module Foo; class Bar; end
-  if s:Match(lnum, s:ruby_indent_keywords)
+  if s:Match(lnum, s:javascript_indent_keywords)
     let ind = msl_ind + &sw
     if s:Match(lnum, s:end_end_regex)
       let ind = ind - &sw
