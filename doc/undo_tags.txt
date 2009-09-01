@@ -1,0 +1,105 @@
+*undo_tags.txt*  bookmarks for undo states, for Vim version 7.x  
+
+Author       :  A.Politz cbyvgmn@su-gevre.qr
+                        (rot13 encoded email)
+Contributors : Andy Wokula
+Last change  : 2007-09-01
+Copyright    : This script is freeware. Use it at your own risk.
+
+==============================================================================
+
+UNDO TAGS							*undo-tags*
+
+
+This script is very straightforward. It offers commands to make vim's undo
+branches feature a bit more accessible. You can tag an undo branch and give it
+a description, list branches by any order and finally return to the text state
+the tag represents. The plugins data is stored in a buffer variable
+`b:undo_tags'. The features are, in their power, identical to the |undo|
+commands. If you haven't read about |undo-branches|, you should do so now.
+
+==============================================================================
+
+COMMANDS		       				 *undo-tags-commands*
+
+							      *undo-tags-mark*
+:UTMark {tagname} [{description}]			 
+		The first argument is mandatory, the second is optional. If a
+		tag with the given name already exists, you need to use the
+		|bang| operator to overwrite it. Everything after the
+		{tagname} is the description. You don't have to quote it, but
+		there must be no (unescaped) whitespace in the {tagname}.
+		Completion is available for {tagname}.
+		Example : >
+			:UTMark before I am about to make big changes! 
+<		Creates a tag with name 'before` for the current branch, rest
+		is the description.
+
+							      *undo-tags-list*
+:UTList [{sort-by}]					 
+		Lists the known tags, for the current buffer. The optional
+		argument specifies the sort-key of the output. The default is
+		by time. Completion is available for {sort-by}.
+		Example : >
+			:UTList tag
+<		List known tags, sort by tagnames.
+
+							   *undo-tags-restore*
+:UTRestore {tagname}					 
+		Jump to the branch in the undo tree, where you have created
+		this tag. The argument is mandatory, of course. Completion
+		is available for {tagname}.
+		Example : >
+			:UTRestore before
+<		Brings you back to the time, where the tag 'before` was
+		created.
+		Note: This will fail in case you ran out of 'undolevels'.
+		If this happens, you'll receive a message and the tag
+		will be deleted.
+
+							    *undo-tags-delete*
+:UTDelete {pattern}					  
+		Delete all tags for the current buffer for which tag matches
+		{pattern}. A '^' is prepended and a '$' appended to the
+		{pattern} first, to avoid `unexpected' behaviour. Completion
+		is available for {pattern} as tagnames.
+		Examples : >
+			 :UTDelete before
+<		Delete the tag with name `before'. >
+		
+			 :UTDelete be.*
+<		Delete all tags which start with `be'. >
+		
+			 :UTDelete .*
+<		Delete all tags (in the current buffer).
+		
+==============================================================================
+
+DISABLE				     *undo-tags-uninstall* *undo-tags-disable*
+
+To disable the plugin, drop a >
+	let loaded_undo_tags = 1
+<in your vimrc.
+
+To uninstall it, remove the files
+	plugin/undo_tags.vim ~
+	doc/undo_tags.txt ~
+and refresh the helptags with |:helptags|.
+
+==============================================================================
+
+HISTORY							*undo-tags-history* 
+
+v1	*	 Initial release.
+v1.1	*	-renamed commands
+		-replaced autocommand with function
+		-added command for deleting tags
+		-use |changenr()| instead of |:undolist|
+		 this way it always returns to the correct textstate
+v1.2    *	-display current state in the tags list
+		-helpfile more standard alike
+		-better handling of long tagnames
+		-allow tagging a virgin buffer
+		
+==============================================================================
+vim:tw=78:ts=8:ft=help:sts=0

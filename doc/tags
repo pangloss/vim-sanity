@@ -187,6 +187,16 @@ textile-commands	textile.txt	/*textile-commands*
 textile-credits	textile.txt	/*textile-credits*
 textile-requirements	textile.txt	/*textile-requirements*
 textile.txt	textile.txt	/*textile.txt*
+undo-tags	undo_tags.txt	/*undo-tags*
+undo-tags-commands	undo_tags.txt	/*undo-tags-commands*
+undo-tags-delete	undo_tags.txt	/*undo-tags-delete*
+undo-tags-disable	undo_tags.txt	/*undo-tags-disable*
+undo-tags-history	undo_tags.txt	/*undo-tags-history*
+undo-tags-list	undo_tags.txt	/*undo-tags-list*
+undo-tags-mark	undo_tags.txt	/*undo-tags-mark*
+undo-tags-restore	undo_tags.txt	/*undo-tags-restore*
+undo-tags-uninstall	undo_tags.txt	/*undo-tags-uninstall*
+undo_tags.txt	undo_tags.txt	/*undo_tags.txt*
 utl	utl_usr.txt	/*utl*
 utl-absDontCombine	utl_usr.txt	/*utl-absDontCombine*
 utl-btSample	utl_usr.txt	/*utl-btSample*
