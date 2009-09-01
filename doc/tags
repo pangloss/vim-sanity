@@ -1,8 +1,17 @@
+QuickfixsignsBalloon()	quickfixsigns.txt	/*QuickfixsignsBalloon()*
+QuickfixsignsClear()	quickfixsigns.txt	/*QuickfixsignsClear()*
+QuickfixsignsMarks()	quickfixsigns.txt	/*QuickfixsignsMarks()*
+QuickfixsignsSet()	quickfixsigns.txt	/*QuickfixsignsSet()*
 Utl-chgOverview	utl_usr.txt	/*Utl-chgOverview*
 config/rails.vim	rails.txt	/*config\/rails.vim*
 cs	surround.txt	/*cs*
 ds	surround.txt	/*ds*
 g:loaded_rails	rails.txt	/*g:loaded_rails*
+g:quickfixsigns_balloon	quickfixsigns.txt	/*g:quickfixsigns_balloon*
+g:quickfixsigns_lists	quickfixsigns.txt	/*g:quickfixsigns_lists*
+g:quickfixsigns_marks	quickfixsigns.txt	/*g:quickfixsigns_marks*
+g:quickfixsigns_marks_def	quickfixsigns.txt	/*g:quickfixsigns_marks_def*
+g:quickfixsigns_max	quickfixsigns.txt	/*g:quickfixsigns_max*
 g:rails_abbreviations	rails.txt	/*g:rails_abbreviations*
 g:rails_ctags_arguments	rails.txt	/*g:rails_ctags_arguments*
 g:rails_dbext	rails.txt	/*g:rails_dbext*
@@ -33,6 +42,7 @@ project-settings	project.txt	/*project-settings*
 project-syntax	project.txt	/*project-syntax*
 project-tips	project.txt	/*project-tips*
 project.txt	project.txt	/*project.txt*
+quickfixsigns.txt	quickfixsigns.txt	/*quickfixsigns.txt*
 rails	rails.txt	/*rails*
 rails-'cfu'	rails.txt	/*rails-'cfu'*
 rails-'completefunc'	rails.txt	/*rails-'completefunc'*

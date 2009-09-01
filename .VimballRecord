@@ -1,1 +1,2 @@
 utl_3_0a.vba: call delete('/Users/dw/.vim/doc/utl_usr.txt')|call delete('/Users/dw/.vim/autoload/utl_lib.vim')|call delete('/Users/dw/.vim/plugin/utl.vim')|call delete('/Users/dw/.vim/plugin/utl_rc.vim')|call delete('/Users/dw/.vim/plugin/utl_scm.vim')|call delete('/Users/dw/.vim/plugin/utl_uri.vim')
+quickfixsigns.vba: call delete('/Users/dw/.vim/doc/quickfixsigns.txt')|call delete('/Users/dw/.vim/plugin/quickfixsigns.vim')
