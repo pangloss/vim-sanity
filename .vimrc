@@ -229,3 +229,7 @@ set completeopt=longest,menu
 set wildmode=list:longest,list:full
 set complete=.,t
 
+" Key to echo the next function
+let g:EchoFuncKeyNext = '<S-Space>'
+" Key to echo the prev function
+let g:EchoFuncKeyPrev = '<S-Esc>'
