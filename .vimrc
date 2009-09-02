@@ -56,9 +56,22 @@ nmap <silent> <Leader>p <Plug>ToggleProject
 
 " Handy tab controls
 map tn :tabnew<CR>
+map <silent> <Leader>n :tabnew #<CR>
 map td :tabclose<CR>
 map th :tabp<CR>
 map tl :tabn<CR>
+
+" Arrange a window with 4 buffers in any configuration into a 2x2 grid.
+" steps: arrange in one column, move 1 buffer to the right column,
+"   switch to the top of the left column and mark the buffer, switch back to
+"   the right column, split the buffer and jump to the marked buffer. Delete
+"   the mark. Rotate the right pane to put the buffers back into their
+"   original order. Switch back to the copy of the marked buffer in the first
+"   column and close the extra copy of that buffer. 
+"
+" With different number of buffers, it usually results in the right column
+" having 2 buffers and the left column with the rest of them.
+nmap <silent> <Leader>4 <C-W>J<C-W>w<C-W>J<C-W>w<C-W>L<C-W>hmM<C-W>l<C-W>s'M:delm M<CR><C-W>r<C-W>w<C-W>q
 
 " Make a composite fold of selected folds except delete the first child fold
 " I wanted this at one time for something...
@@ -77,7 +90,7 @@ map Q gq
 " imap <S-Tab> <Esc>
  
 " \F (capital F) activates folding on the file
-map <unique> <silent> <Leader>F <Plug>SimpleFold_Foldsearch
+map <silent> <Leader>F <Plug>SimpleFold_Foldsearch
 
 
 
@@ -169,13 +182,13 @@ map <Leader>sc :RScontroller <CR>
 map <Leader>sv :RSview <CR>
 map <Leader>su :RSunittest <CR>
 map <Leader>sf :RSfunctionaltest <CR>
-map <Leader>si :Rintegrationtest<CR>
-map <Leader>vm :RSmodel <CR>
-map <Leader>vc :RScontroller <CR>
-map <Leader>vv :RSview <CR>
-map <Leader>vu :RSunittest <CR>
-map <Leader>vf :RSfunctionaltest <CR>
-map <Leader>vi :Rintegrationtest<CR>
+map <Leader>si :RSintegrationtest<CR>
+map <Leader>vm :RVmodel <CR>
+map <Leader>vc :RVcontroller <CR>
+map <Leader>vv :RVview <CR>
+map <Leader>vu :RVunittest <CR>
+map <Leader>vf :RVfunctionaltest <CR>
+map <Leader>vi :RVintegrationtest<CR>
 
 " Hide search highlighting
 map <Leader>h :set invhls <CR>
@@ -192,8 +205,10 @@ map <Leader>te :tabe <C-R>=expand("%:p:h") <CR>/
 " Command mode: Ctrl+P
 cmap <C-P> <C-R>=expand("%:p:h") <CR>/
 
-" Maps autocomplete to Shift-Space
-imap <S-Space> <C-N>
+" Maps autocomplete to Ctrl-Space
+imap <C-Space> <C-N>
+
+nmap <Leader>d :bd <CR>
 
 " Duplicate a selection
 " Visual mode: D
@@ -207,9 +222,6 @@ vmap gp gp :call setreg('"', getreg('0')) <CR>
 
 " Press P in visual mode to get the original behaviour of p
 vmap P "1ygv"0p :call setreg('"', getreg('1')) <CR>
-
-" Snippets are activated by Shift+Tab
-let g:snippetsEmu_key = "<S-Tab>"
 
 " Tab completion options
 " (only complete to the longest unambiguous match, and show a menu)
