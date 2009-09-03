@@ -56,10 +56,13 @@ nmap <silent> <Leader>p <Plug>ToggleProject
 
 " Handy tab controls
 map <silent> tn :tabnew<CR>
-map <silent> <Leader>n :tabnew %<CR>
 map <silent> td :tabclose<CR>
 map <silent> th :tabp<CR>
 map <silent> tl :tabn<CR>
+" Open a new tab with the current file, with a bit of a hack to allow it to
+" work on files with modifications and not lose undo history because :tabnew %
+" doesn't work correctly.
+map <silent> <Leader>n :tabnew<CR> :execute 'e #'<CR>
 
 map <silent> <Leader><Space> :cn <CR>
 map <silent> <Leader><S-Space> :cp <CR>
