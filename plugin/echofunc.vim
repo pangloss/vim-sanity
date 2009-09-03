@@ -279,7 +279,7 @@ function! s:RestoreSettings()
     if s:ShowMode
         set showmode
     endif
-    exec "set cmdheight=".s:CmdHeight
+    "exec "set cmdheight=".s:CmdHeight
     echo
 endfunction
 
