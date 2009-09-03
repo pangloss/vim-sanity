@@ -55,11 +55,14 @@ set hid
 nmap <silent> <Leader>p <Plug>ToggleProject
 
 " Handy tab controls
-map tn :tabnew<CR>
-map <silent> <Leader>n :tabnew #<CR>
-map td :tabclose<CR>
-map th :tabp<CR>
-map tl :tabn<CR>
+map <silent> tn :tabnew<CR>
+map <silent> <Leader>n :tabnew %<CR>
+map <silent> td :tabclose<CR>
+map <silent> th :tabp<CR>
+map <silent> tl :tabn<CR>
+
+map <silent> <Leader><Space> :cn <CR>
+map <silent> <Leader><S-Space> :cp <CR>
 
 " Arrange a window with 4 buffers in any configuration into a 2x2 grid.
 " steps: arrange in one column, move 1 buffer to the right column,
@@ -165,6 +168,7 @@ vnoremap <silent><Down> gj
 map <Leader>R :e doc/README_FOR_APP<CR>
 
 " Leader shortcuts for Rails commands
+map <silent> <Leader>r :.Rake <CR>
 map <Leader>m :Rmodel <CR>
 map <Leader>c :Rcontroller <CR>
 map <Leader>v :Rview <CR>
@@ -191,7 +195,7 @@ map <Leader>vf :RVfunctionaltest <CR>
 map <Leader>vi :RVintegrationtest<CR>
 
 " Hide search highlighting
-map <Leader>h :set invhls <CR>
+map <silent> <Leader>h :set invhls <CR>
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
