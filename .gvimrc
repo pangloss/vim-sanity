@@ -51,3 +51,4 @@ set t_vb=
 set guioptions=aec
 set columns=300
 set lines=60
+color slate

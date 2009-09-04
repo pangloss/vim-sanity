@@ -142,7 +142,7 @@ else
 
 endif " has("autocmd")
 
-color slate
+color default
 
 " Up/down key behaviour {{{1
 " -- Changes up/down arrow keys to behave screen-wise, rather than file-wise.
@@ -167,8 +167,10 @@ vnoremap <silent><Down> gj
 " Below, I uncerimoniously copy stuff from
 " git://github.com/jferris/config_files.git
 
-" Edit the README_FOR_APP (makes :R commands work)
-map <Leader>R :e doc/README_FOR_APP<CR>
+" Edit config/routes.rb
+map <Leader>R :e config/routes.rb<CR>
+map <Leader>E :e config/environment.rb<CR>
+map <Leader>S :e db/schema.rb<CR>
 
 " Leader shortcuts for Rails commands
 map <silent> <Leader>r :.Rake <CR>
@@ -215,7 +217,13 @@ cmap <C-P> <C-R>=expand("%:p:h") <CR>/
 " Maps autocomplete to Ctrl-Space
 imap <C-Space> <C-N>
 
+" Delete the current buffer. Closes all views of the buffer and removes it
+" from the buffer list
 nmap <Leader>d :bd <CR>
+
+" Delete the current file and close the buffer. This only works if the file is
+" checked in to git and unmodified.
+nmap <Leader><C-d> :!git rm %<CR>:bd<CR>
 
 " Duplicate a selection
 " Visual mode: D
