@@ -235,6 +235,14 @@ vmap gp gp :call setreg('"', getreg('0')) <CR>
 " Press P while in visual mode to get the original behaviour of p
 vmap P "1ygv"0p :call setreg('"', getreg('1')) <CR>
 
+" Display extra whitespace
+set list listchars=tab:»·,trail:·
+
+if executable("ack")
+  set grepprg=ack\ -H\ --nogroup\ --nocolor
+endif
+
+
 " Tab completion options
 " (only complete to the longest unambiguous match, and show a menu)
 set completeopt=longest,menu
