@@ -199,6 +199,12 @@ map <Leader>vu :RVunittest <CR>
 map <Leader>vf :RVfunctionaltest <CR>
 map <Leader>vi :RVintegrationtest<CR>
 
+" Short cut to and configuration for the taglist.vim plugin
+nmap <silent> <Leader>a :TlistToggle<CR><C-w>p
+let Tlist_Show_One_File = 1
+let Tlist_Use_Right_Window = 1
+let Tlist_Close_On_Select = 1
+
 " Hide search highlighting
 map <silent> <Leader>h :set invhls <CR>
 
