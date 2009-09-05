@@ -188,7 +188,7 @@ map <Leader>vi :RVintegrationtest<CR>
 
 " Use \a to open the taglist and jump to it, or jump to the previous buffer
 " and close the tag list.
-nmap <silent><expr> <Leader>a bufwinnr(g:TagList_title) == -1 ? ":TlistToggle<CR><C-w>p" : "<C-w>p:TlistToggle<CR>"
+nmap <silent><expr> <Leader>a bufwinnr(g:TagList_title) == -1 ? ":TlistToggle<CR><C-w>p" : bufwinnr(g:TagList_title) == bufwinnr('%') ? "<C-w>p:TlistToggle<CR>" : ":TlistToggle<CR>"
 " Configuration for the taglist.vim plugin
 let Tlist_Show_One_File = 1
 let Tlist_Use_Right_Window = 1
