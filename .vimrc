@@ -163,6 +163,10 @@ vnoremap <silent>j gj
 vnoremap <silent><Up> gk
 vnoremap <silent><Down> gj
 
+map <C-l> <C-w>l
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
 
 " Below, I uncerimoniously copy stuff from
 " git://github.com/jferris/config_files.git
