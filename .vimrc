@@ -101,6 +101,16 @@ if has("autocmd")
   " For all text files set 'textwidth' to 78 characters.
   autocmd FileType text setlocal textwidth=78
 
+  " If the taglist window is open, close it and switch to the previously
+  " active buffer when leaving the tab.
+  autocmd TabLeave * 
+    \ if bufwinnr(g:TagList_title) != -1 |
+      \ if bufwinnr(g:TagList_title) == bufwinnr('%') |
+        \ exe bufwinnr('#') . 'wincmd w' |
+      \ endif |
+      \ exe 'TlistClose' |
+    \ endif
+
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
   " (happens when dropping a file on gvim).
@@ -176,8 +186,10 @@ map <Leader>vu :RVunittest <CR>
 map <Leader>vf :RVfunctionaltest <CR>
 map <Leader>vi :RVintegrationtest<CR>
 
-" Short cut to and configuration for the taglist.vim plugin
-nmap <silent> <Leader>a :TlistToggle<CR><C-w>p
+" Use \a to open the taglist and jump to it, or jump to the previous buffer
+" and close the tag list.
+nmap <silent><expr> <Leader>a bufwinnr(g:TagList_title) == -1 ? ":TlistToggle<CR><C-w>p" : "<C-w>p:TlistToggle<CR>"
+" Configuration for the taglist.vim plugin
 let Tlist_Show_One_File = 1
 let Tlist_Use_Right_Window = 1
 let Tlist_Close_On_Select = 1
