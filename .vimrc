@@ -1,19 +1,3 @@
-" An example for a vimrc file.
-"
-" Maintainer:	Bram Moolenaar <Bram@vim.org>
-" Last change:	2002 Sep 19
-"
-" To use it, copy it to
-"     for Unix and OS/2:  ~/.vimrc
-"	      for Amiga:  s:.vimrc
-"  for MS-DOS and Win32:  $VIM\_vimrc
-"	    for OpenVMS:  sys$login:.vimrc
-
-" When started as "evim", evim.vim will already have done these settings.
-if v:progname =~? "evim"
-  finish
-endif
-
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
@@ -21,16 +5,11 @@ set nocompatible
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-if has("vms")
-  set nobackup		" do not keep a backup file, use versions instead
-else
-  set nobackup		" keep a backup file
-endif
-set history=500		" keep 50 lines of command line history
+set history=500		" keep 500 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
-set ai
+set autoindent
 
 "set number
 set nowrap
@@ -47,10 +26,6 @@ set path=.,**
 set viminfo='50,<1000,s100,:1000,n~/.vim/viminfo
 set hid
 
-"map <silent> <F3> :call BufferList()<CR>
-"map <silent> <F4> :TlistToggle<CR>
-"nmap <silent> <F2> <Plug>ToggleProject
-
 " Toggle the Project plugin with \p
 nmap <silent> <Leader>p <Plug>ToggleProject
 
@@ -59,11 +34,13 @@ map <silent> tn :tabnew<CR>
 map <silent> td :tabclose<CR>
 map <silent> th :tabp<CR>
 map <silent> tl :tabn<CR>
+
 " Open a new tab with the current file, with a bit of a hack to allow it to
 " work on files with modifications and not lose undo history because :tabnew %
 " doesn't work correctly.
 map <silent> <Leader>n :tabnew<CR> :execute 'e #'<CR>
 
+" Jump back and forth between lines on the clist
 map <silent> <Leader><Space> :cn <CR>
 map <silent> <Leader><S-Space> :cp <CR>
 
@@ -83,22 +60,14 @@ nmap <silent> <Leader>4 <C-W>J<C-W>w<C-W>J<C-W>w<C-W>L<C-W>hmM<C-W>l<C-W>s'M:del
 " I wanted this at one time for something...
 vmap zZ zFzozdzc
 
-"map <leader>t :TlistToggle<CR>
-
-" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
-" let &guioptions = substitute(&guioptions, "t", "", "g")
-
 " Don't use Ex mode, use Q for formatting
 map Q gq
-
 
 " Shift tab escapes from insert mode (now using S-Tab using for snippets)
 " imap <S-Tab> <Esc>
  
 " \F (capital F) activates folding on the file
 map <silent> <Leader>F <Plug>SimpleFold_Foldsearch
-
-
 
 " This is an alternative that also works in block mode, but the deleted
 " text is lost and it only works for putting the current register.
@@ -109,6 +78,12 @@ map <silent> <Leader>F <Plug>SimpleFold_Foldsearch
 if &t_Co > 2 || has("gui_running")
   syntax on
 endif
+if has("gui_running")
+  color slate
+else
+  color default
+endif
+
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
@@ -141,8 +116,6 @@ else
   set autoindent		" always set autoindenting on
 
 endif " has("autocmd")
-
-color default
 
 " Up/down key behaviour {{{1
 " -- Changes up/down arrow keys to behave screen-wise, rather than file-wise.
@@ -243,9 +216,11 @@ vmap D y'>p
 " overwriting the default register
 vmap p p :call setreg('"', getreg('0')) <CR>
 
+" Press gp while in visual mode to replace the selection without overwriting
+" the default register and move the cursor to after the pasted text
 vmap gp gp :call setreg('"', getreg('0')) <CR>
 
-" Press P in visual mode to get the original behaviour of p
+" Press P while in visual mode to get the original behaviour of p
 vmap P "1ygv"0p :call setreg('"', getreg('1')) <CR>
 
 " Tab completion options
