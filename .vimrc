@@ -26,8 +26,8 @@ set path=.,**
 set viminfo='50,<1000,s100,:1000,n~/.vim/viminfo
 set hid
 
-" Toggle the Project plugin with \p
-nmap <silent> <Leader>p <Plug>ToggleProject
+" Toggle the ProjecDTreeToggleth \p
+nmap <silent> <Leader>p :NERDTreeToggle<CR>
 
 " Handy tab controls
 map <silent> tn :tabnew<CR>
