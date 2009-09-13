@@ -67,7 +67,7 @@ map Q gq
 " imap <S-Tab> <Esc>
  
 " \F (capital F) activates folding on the file
-map <silent> <Leader>F <Plug>SimpleFold_Foldsearch
+map <silent> <Leader><C-f> <Plug>SimpleFold_Foldsearch
 
 " This is an alternative that also works in block mode, but the deleted
 " text is lost and it only works for putting the current register.
@@ -158,6 +158,7 @@ map <C-k> <C-w>k
 map <Leader>R :e config/routes.rb<CR>
 map <Leader>E :e config/environment.rb<CR>
 map <Leader>S :e db/schema.rb<CR>
+map <Leader>F :e spec/factories.rb<CR>
 
 " Leader shortcuts for Rails commands
 map <silent> <Leader>r :.Rake <CR>
@@ -193,6 +194,7 @@ nmap <silent><expr> <Leader>a bufwinnr(g:TagList_title) == -1 ? ":TlistToggle<CR
 let Tlist_Show_One_File = 1
 let Tlist_Use_Right_Window = 1
 let Tlist_Close_On_Select = 1
+let Tlist_WinWidth = 60
 
 " Hide search highlighting
 map <silent> <Leader>h :set invhls <CR>
