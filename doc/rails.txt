@@ -79,8 +79,8 @@ Rails application development.
    |:Rinvert| takes a self.up migration and writes a self.down.
    |rails-refactoring|
 
-8. Integration with other plugins.  |:Rproject| creates a new project.vim
-   project or spawns NERDTree.  If dbext.vim is installed, it will be
+8. Integration with other plugins.  |:Rtree| spawns NERDTree.vim or creates a
+   new project.vim project.  If dbext.vim is installed, it will be
    transparently configured to reflect database.yml.  Cream users get some
    additional mappings, and all GUI users get a menu. |rails-integration|
 
@@ -300,19 +300,21 @@ Alternate and Related Files ~
 Two commands, :A and :R, are used quickly jump to an "alternate" and a
 "related" file, defined below.
 
-		*rails-:A* *rails-:AE* *rails-:AS* *rails-:AV* *rails-:AT*
+	*rails-:A* *rails-:AE* *rails-:AS* *rails-:AV* *rails-:AT* *rails-:AD*
 :A			These commands were picked to mimic Michael Sharpe's
 :AE			a.vim.  Briefly, they edit the "alternate" file, in
 :AS			either the same window (:A and :AE), a new split
-:AV			window (:AS), a new vertically split window (:AV), or
-:AT			a new tab (:AT).  A mapping for :A is [f .
+:AV			window (:AS), a new vertically split window (:AV), a
+:AT			new tab (:AT), or read it into the current buffer
+:AD                     (:AD).  A mapping for :A is [f .
 
-		*rails-:R* *rails-:RE* *rails-:RS* *rails-:RV* *rails-:RT*
+	*rails-:R* *rails-:RE* *rails-:RS* *rails-:RV* *rails-:RT* *rails-:RD*
 :R			These are similar |rails-:A| and friends above, only
 :RE			they jump to the "related" file rather than the
 :RS			"alternate."  A mapping for :R is ]f .
 :RV			
 :RT
+:RD
 
 					*rails-alternate* *rails-related*
 The alternate file is most frequently the test file, though there are
@@ -343,12 +345,12 @@ can override the mapping from model related files to controller related files
 (Rset controller=hiring) and vice versa (Rset model=employee).  See
 |rails-:Rset|.
 
-Each of the following commands has variants for splitting, vertical splitting
-and opening in a new tab.  For :Rmodel, those variants would be :RSmodel,
-:RVmodel, and :RTmodel.  There is also :REmodel which is a synonym for :Rmodel
-(future versions might allow customization of the behavior of :Rmodel).  They
-also allow for jumping to methods or line numbers using the same syntax as
-|:Redit|.
+Each of the following commands has variants for splitting, vertical splitting,
+opening in a new tab, and reading the file into the current buffer.  For
+:Rmodel, those variants would be :RSmodel, :RVmodel, :RTmodel, and :RDmodel.
+There is also :REmodel which is a synonym for :Rmodel (future versions might
+allow customization of the behavior of :Rmodel).  They also allow for jumping
+to methods or line numbers using the same syntax as |:Redit|.
 
 
 Model Navigation Commands ~
@@ -432,15 +434,14 @@ like: >
 			that cannot be found.  A new layout will be created if
 			an extension is given.
 
-						*rails-:Rapi*
-:Rapi [{name}]		Edit the API for the specified controller.  This
-			command is deprecated; add it yourself with
-			|:Rnavcommand| if you still desire it.
-
 						*rails-:Rfunctionaltest*
 :Rfunctionaltest [{name}]
 			Edit the functional test or controller spec for the
 			specified controller.
+
+						*rails-:Rapi*
+:Rapi [{name}]		This command is obsolete; add it yourself with
+			|:Rnavcommand| if you still desire it.
 
 Miscellaneous Navigation Commands  ~
 						*rails-misc-navigation*
@@ -455,6 +456,7 @@ The following commands are not clearly associated with models or controllers.
 :Rmetal						|rails-:Rmetal|
 :Renvironment					|rails-:Renvironment|
 :Rinitializer					|rails-:Rinitializer|
+:Rlocale					|rails-:Rlocale|
 :Rintegrationtest				|rails-:Rintegrationtest|
 :Rspec						|rails-:Rspec|
 
@@ -496,6 +498,12 @@ The following commands are not clearly associated with models or controllers.
 						*rails-:Rinitializer*
 :Rinitializer [{name}]  Edit the config/initializers file specified.  With no
 			argument, defaults to editing config/routes.rb.
+
+						*rails-:Rlocale*
+:Rlocale [{name}]	Edit the config/locale file specified, optionally
+			adding a yml or rb extension if none is given.  With
+			no argument, checks config/environment.rb for the
+			default locale.
 
 						*rails-:Rintegrationtest*
 :Rintegrationtest [{name}]
@@ -606,7 +614,7 @@ The :Rextract command can be used to extract a partial to a new file.
 
 						*rails-:Rpartial*
 :[range]Rpartial [{controller}/]{name}	
-			Deprecated alias for :Rextract.
+			Obsolete alias for :Rextract.
 
 If this is your file, in app/views/blog/show.html.erb: >
 
@@ -667,13 +675,14 @@ A handful of Vim plugins are enhanced by rails.vim.  All plugins mentioned can
 be found at http://www.vim.org/.  Cream and GUI menus (for lack of a better
 place) are also covered in this section.
 
-					*rails-:Rproject* *rails-project*
-:Rproject [{file}]	This command is only provided when the |project|
-			plugin is installed.  Invoke :Project (typically
-			without an argument), and search for the root of the
-			current Rails application.  If it is not found, create
-			a new project, with appropriate directories (app,
-			etc., but not vendor).
+					*rails-:Rtree* *rails-:Rproject*
+:Rtree [{arg}]		If |NERDTree| is installed, open a tree for the
+			application root or the given subdirectory.
+			Otherwise, if when the |project| plugin is installed,
+			invoke :Project (typically without an argument), and
+			search for the root of the current Rails application.
+			If it is not found, create a new project, with
+			appropriate directories (app, etc., but not vendor).
 
 						*rails-:Rdbext* *rails-dbext*
 :Rdbext [{environment}] This command is only provided when the |dbext| plugin
