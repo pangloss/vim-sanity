@@ -386,11 +386,11 @@ let g:ruby_simplefold_expr =
 	    \ '|\v^\s*(public|private|protected)>' .
 	    \ '|^\s*\w+attr_(reader|accessor)\s|^\s*[#%"0-9]{0,4}\s*\{\{\{[^{])' .
 	    \ '|^\s*[A-Z]\w+\s*\=[^=]|^__END__$'
-" let g:ruby_simplefold_nestable_start_expr = 
-" 	    \ '\v^\s*(def>|if>|unless>|while>.*(<do>)?|' . 
-" 		\         'until>.*(<do>)?|case>|for>|begin>)' .
-" 		\ '|^[^#]*.*<do>\s*(\|.*\|)?'
-" let g:ruby_simplefold_nestable_end_expr = '\v^\s*end'
+  let g:ruby_simplefold_nestable_start_expr = 
+  	    \ '\v^\s*(def>|if>|unless>|while>.*(<do>)?|' . 
+  		\         'until>.*(<do>)?|case>|for>|begin>)' .
+  		\ '|^[^#]*.*<do>\s*(\|.*\|)?'
+  let g:ruby_simplefold_nestable_end_expr = '\v^\s*end'
     
 let g:ruby_simplefold_prefix = '\v^\s*(#([^{]+|\{[^{]|\{\{[^{])*)?$'
 
