@@ -127,6 +127,12 @@ else
 
 endif " has("autocmd")
 
+let g:SimpleFold_use_subfolds = 0
+"let g:javascript_simplefold_prefix = '^\(\(^\s*\S*\s*:.*\w\+.*\)\|\(^\w.*{\)\|\(^\s*}\)\)\@!.*$'
+"let g:javascript_simplefold_expr =      '\(^\s*\S*\s*:.*\w\+.*\)\|\(^\w.*{\)'
+let g:javascript_simplefold_prefix = '\v^((^\s*\S*\s*:.*\S+.*([,\{]$|\_\s*\}))|(^\w.*[\{=])|(^\s*\}))@!.*$'
+let g:javascript_simplefold_expr =     '\v(^\s*\S*\s*:.*\S+.*([,\{]$|\_\s*\}))|(^\w.*[\{=])'
+
 " Up/down key behaviour {{{1
 " -- Changes up/down arrow keys to behave screen-wise, rather than file-wise.
 "    Behaviour is unchanged in operator-pending mode.
