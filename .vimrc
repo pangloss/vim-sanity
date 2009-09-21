@@ -56,6 +56,11 @@ map <silent> <Leader><S-Space> :cp <CR>
 " having 2 buffers and the left column with the rest of them.
 nmap <silent> <Leader>4 <C-W>J<C-W>w<C-W>J<C-W>w<C-W>L<C-W>hmM<C-W>l<C-W>s'M:delm M<CR><C-W>r<C-W>w<C-W>q
 
+" Select the block from the current location to the line with matching parens,
+" delete all folds in the area and turn it into a single fold. Useful for
+" wrongly folded javascript functions, etc.
+nmap zZ v%zDgvzF
+
 " Make a composite fold of selected folds except delete the first child fold
 " I wanted this at one time for something...
 vmap zZ zFzozdzc
@@ -128,8 +133,6 @@ else
 endif " has("autocmd")
 
 let g:SimpleFold_use_subfolds = 0
-let g:javascript_simplefold_prefix = '\v^((^\s*\S*\s*:.*\S+.*([,\{]$|\_\s*\}))|(^\w.*[\{=])|(^\s*\}))@!.*$'
-let g:javascript_simplefold_expr =     '\v(^\s*\S*\s*:.*\S+.*([,\{]$|\_\s*\}))|(^\w.*[\{=])'
 
 " Up/down key behaviour {{{1
 " -- Changes up/down arrow keys to behave screen-wise, rather than file-wise.
