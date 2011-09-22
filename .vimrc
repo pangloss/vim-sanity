@@ -9,6 +9,8 @@ set history=500		" keep 500 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
+"set ignorecase
+"set smartcase
 set autoindent
 
 "set number
@@ -26,8 +28,14 @@ set path=.,**
 set viminfo='50,<1000,s100,:1000,n~/.vim/viminfo
 set hid
 
+" Set encoding
+set encoding=utf-8
+
 " Toggle the ProjecDTreeToggleth \p
 nmap <silent> <Leader>p :NERDTreeToggle<CR>
+
+" CTags
+map <Leader>rt :!ctags --extra=+f -R *<CR><CR>
 
 " Handy tab controls
 map <silent> tn :tabnew<CR>
@@ -38,7 +46,10 @@ map <silent> tl :tabn<CR>
 " Open a new tab with the current file, with a bit of a hack to allow it to
 " work on files with modifications and not lose undo history because :tabnew %
 " doesn't work correctly.
-map <silent> <Leader>n :tabnew<CR> :execute 'e #'<CR>
+" map <silent> <Leader>n :tabnew<CR> :execute 'e #'<CR>
+
+map <silent> <Leader>n :set relativenumber<CR>
+map <silent> <Leader>N :set norelativenumber<CR>
 
 " Jump back and forth between lines on the clist
 map <silent> <Leader><Space> :cn <CR>
@@ -218,9 +229,6 @@ map <Leader>te :tabe <C-R>=expand("%:p:h") <CR>/
 " Command mode: Ctrl+P
 cmap <C-P> <C-R>=expand("%:p:h") <CR>/
 
-" Maps autocomplete to Ctrl-Space
-imap <C-Space> <C-N>
-
 " Delete the current buffer. Closes all views of the buffer and removes it
 " from the buffer list
 nmap <Leader>d :bd <CR>
@@ -245,7 +253,7 @@ vmap gp gp :call setreg('"', getreg('0')) <CR>
 vmap P "1ygv"0p :call setreg('"', getreg('1')) <CR>
 
 " Display extra whitespace
-set list listchars=tab:»·,trail:·
+set listchars=tab:»·,trail:·
 
 if executable("ack")
   set grepprg=ack\ -H\ --nogroup\ --nocolor
@@ -256,9 +264,37 @@ endif
 " (only complete to the longest unambiguous match, and show a menu)
 set completeopt=longest,menu
 set wildmode=list:longest,list:full
+set wildignore+=*.o,*.obj,.git,*.rbc
 set complete=.,t
 
 " Key to echo the next function
-let g:EchoFuncKeyNext = '<S-Space>'
+let g:EchoFuncKeyNext = '<C-Space>'
 " Key to echo the prev function
-let g:EchoFuncKeyPrev = '<S-Esc>'
+let g:EchoFuncKeyPrev = '<C-S-Space>'
+
+
+" Thorfile, Rakefile and Gemfile are Ruby
+au BufRead,BufNewFile {Gemfile,Rakefile,Thorfile,config.ru}    set ft=ruby
+
+function! s:setupWrapping()
+  set wrap
+  set wm=2
+  set textwidth=72
+endfunction
+
+function! s:setupMarkup()
+  call s:setupWrapping()
+  map <buffer> <Leader>p :Mm <CR>
+endfunction
+
+" md, markdown, and mk are markdown and define buffer-local preview
+au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkup()
+
+au BufRead,BufNewFile *.txt call s:setupWrapping()
+
+"Directories for swp files
+set backupdir=~/.vim/backup
+set directory=~/.vim/backup
+
+let g:SuperTabDefaultCompletionType = "<c-n>"
+let g:SuperTabContextDefaultCompletionType = "<c-n>"
