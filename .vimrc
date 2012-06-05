@@ -54,6 +54,7 @@ map <silent> <Leader>N :set norelativenumber<CR>
 " Jump back and forth between lines on the clist
 map <silent> <Leader><Space> :cn <CR>
 map <silent> <Leader><S-Space> :cp <CR>
+map <silent> <Leader><C-Space> :cnf <CR>
 
 " Arrange a window with 4 buffers in any configuration into a 2x2 grid.
 " steps: arrange in one column, move 1 buffer to the right column,
@@ -61,7 +62,7 @@ map <silent> <Leader><S-Space> :cp <CR>
 "   the right column, split the buffer and jump to the marked buffer. Delete
 "   the mark. Rotate the right pane to put the buffers back into their
 "   original order. Switch back to the copy of the marked buffer in the first
-"   column and close the extra copy of that buffer. 
+"   column and close the extra copy of that buffer.
 "
 " With different number of buffers, it usually results in the right column
 " having 2 buffers and the left column with the rest of them.
@@ -81,7 +82,7 @@ map Q gq
 
 " Shift tab escapes from insert mode (now using S-Tab using for snippets)
 " imap <S-Tab> <Esc>
- 
+
 " \F (capital F) activates folding on the file
 map <silent> <Leader><C-f> <Plug>SimpleFold_Foldsearch
 
@@ -119,7 +120,7 @@ if has("autocmd")
 
   " If the taglist window is open, close it and switch to the previously
   " active buffer when leaving the tab.
-  autocmd TabLeave * 
+  autocmd TabLeave *
     \ if bufwinnr(g:TagList_title) != -1 |
       \ if bufwinnr(g:TagList_title) == bufwinnr('%') |
         \ exe bufwinnr('#') . 'wincmd w' |
@@ -171,39 +172,41 @@ map <C-k> <C-w>k
 
 " Below, I uncerimoniously copy stuff from
 " git://github.com/jferris/config_files.git
+"
+" .... not doing so much rails anymore.
 
 " Edit config/routes.rb
-map <Leader>R :e config/routes.rb<CR>
-map <Leader>E :e config/environment.rb<CR>
-map <Leader>S :e db/schema.rb<CR>
-map <Leader>F :e spec/factories.rb<CR>
+"map <Leader>R :e config/routes.rb<CR>
+"map <Leader>E :e config/environment.rb<CR>
+"map <Leader>S :e db/schema.rb<CR>
+"map <Leader>F :e spec/factories.rb<CR>
 
 " Leader shortcuts for Rails commands
-map <silent> <Leader>r :.Rake <CR>
-map <Leader>m :Rmodel <CR>
-map <Leader>c :Rcontroller <CR>
-map <Leader>v :Rview <CR>
-map <Leader>u :Runittest <CR>
-map <Leader>f :Rfunctionaltest <CR>
-map <Leader>i :Rintegrationtest<CR>
-map <Leader>tm :RTmodel <CR>
-map <Leader>tc :RTcontroller <CR>
-map <Leader>tv :RTview <CR>
-map <Leader>tu :RTunittest <CR>
-map <Leader>tf :RTfunctionaltest <CR>
-map <Leader>ti :Rintegrationtest<CR>
-map <Leader>sm :RSmodel <CR>
-map <Leader>sc :RScontroller <CR>
-map <Leader>sv :RSview <CR>
-map <Leader>su :RSunittest <CR>
-map <Leader>sf :RSfunctionaltest <CR>
-map <Leader>si :RSintegrationtest<CR>
-map <Leader>vm :RVmodel <CR>
-map <Leader>vc :RVcontroller <CR>
-map <Leader>vv :RVview <CR>
-map <Leader>vu :RVunittest <CR>
-map <Leader>vf :RVfunctionaltest <CR>
-map <Leader>vi :RVintegrationtest<CR>
+"map <silent> <Leader>r :.Rake <CR>
+"map <Leader>m :Rmodel <CR>
+"map <Leader>c :Rcontroller <CR>
+"map <Leader>v :Rview <CR>
+"map <Leader>u :Runittest <CR>
+"map <Leader>f :Rfunctionaltest <CR>
+"map <Leader>i :Rintegrationtest<CR>
+"map <Leader>tm :RTmodel <CR>
+"map <Leader>tc :RTcontroller <CR>
+"map <Leader>tv :RTview <CR>
+"map <Leader>tu :RTunittest <CR>
+"map <Leader>tf :RTfunctionaltest <CR>
+"map <Leader>ti :Rintegrationtest<CR>
+"map <Leader>sm :RSmodel <CR>
+"map <Leader>sc :RScontroller <CR>
+"map <Leader>sv :RSview <CR>
+"map <Leader>su :RSunittest <CR>
+"map <Leader>sf :RSfunctionaltest <CR>
+"map <Leader>si :RSintegrationtest<CR>
+"map <Leader>vm :RVmodel <CR>
+"map <Leader>vc :RVcontroller <CR>
+"map <Leader>vv :RVview <CR>
+"map <Leader>vu :RVunittest <CR>
+"map <Leader>vf :RVfunctionaltest <CR>
+"map <Leader>vi :RVintegrationtest<CR>
 
 " Use \a to open the taglist and jump to it, or jump to the previous buffer
 " and close the tag list.
@@ -232,6 +235,9 @@ cmap <C-P> <C-R>=expand("%:p:h") <CR>/
 " Delete the current buffer. Closes all views of the buffer and removes it
 " from the buffer list
 nmap <Leader>d :bd <CR>
+
+" Quicker way to close a window.
+nmap <Leader>q :q <CR>
 
 " Delete the current file and close the buffer. This only works if the file is
 " checked in to git and unmodified.
@@ -276,6 +282,9 @@ let g:EchoFuncKeyPrev = '<C-S-Space>'
 " Thorfile, Rakefile and Gemfile are Ruby
 au BufRead,BufNewFile {Gemfile,Rakefile,Thorfile,config.ru}    set ft=ruby
 
+" For dust templates
+au BufNewFile,BufRead *.dust set filetype=html
+
 function! s:setupWrapping()
   set wrap
   set wm=2
@@ -298,3 +307,24 @@ set directory=~/.vim/backup
 
 let g:SuperTabDefaultCompletionType = "<c-n>"
 let g:SuperTabContextDefaultCompletionType = "<c-n>"
+
+" From http://vimbits.com/bits?sort=top
+map Y y$
+
+" Adapted from http://technotales.wordpress.com/2010/03/31/preserve-a-vim-function-that-keeps-your-state/
+function! Preserve(command)
+  " Preparation: save last search, and cursor position.
+  let _s=@/
+  let l = line(".")
+  let c = col(".")
+  " Do the business:
+  execute a:command
+  " Clean up: restore previous search history, and cursor position
+  let @/=_s
+  call cursor(l, c)
+endfunction
+
+nmap <silent> <leader>= :call Preserve("normal gg=G")<CR>
+nnoremap <silent> <leader>W :call Preserve("%s/\\s\\+$//e")<CR>
+autocmd BufWritePre *.py,*.js,*.rb,*.coffee :call Preserve("%s/\\s\\+$//e")
+
