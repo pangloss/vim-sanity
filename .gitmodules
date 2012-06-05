@@ -1,0 +1,3 @@
+[submodule "bundle/dustjs"]
+	path = bundle/dustjs
+	url = git://github.com/jimmyhchan/dustjs.vim.git
