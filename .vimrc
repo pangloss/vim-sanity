@@ -328,3 +328,9 @@ nmap <silent> <leader>= :call Preserve("normal gg=G")<CR>
 nnoremap <silent> <leader>W :call Preserve("%s/\\s\\+$//e")<CR>
 autocmd BufWritePre *.py,*.js,*.rb,*.coffee :call Preserve("%s/\\s\\+$//e")
 
+" Settings for Specky
+" see :help specky
+let g:speckyQuoteSwitcherKey = "<C-S>'"
+let g:speckySpecSwitcherKey  = "<C-S>s"
+let g:speckyRunSpecKey       = "<C-S>r"
+let g:speckyWindowType       = 2
