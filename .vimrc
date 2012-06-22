@@ -35,7 +35,7 @@ set encoding=utf-8
 nmap <silent> <Leader>p :NERDTreeToggle<CR>
 
 " CTags
-map <Leader>rt :!ctags --extra=+f -R *<CR><CR>
+"map <Leader>rt :!ctags --extra=+f -R *<CR><CR>
 
 " Handy tab controls
 map <silent> tn :tabnew<CR>
@@ -96,7 +96,8 @@ if &t_Co > 2 || has("gui_running")
   syntax on
 endif
 if has("gui_running")
-  color slate
+  "color slate
+  color railscat
 else
   color default
 endif
@@ -222,11 +223,11 @@ map <silent> <Leader>h :set invhls <CR>
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
-map <Leader>e :e <C-R>=expand("%:p:h") <CR>/
+" map <Leader>e :e <C-R>=expand("%:p:h") <CR>/
 
 " Opens a tab edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>t
-map <Leader>te :tabe <C-R>=expand("%:p:h") <CR>/
+" map <Leader>te :tabe <C-R>=expand("%:p:h") <CR>/
 
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
