@@ -3,6 +3,13 @@
 set nocompatible
 set modelines=0
 
+" undofile tells Vim to create <FILENAME>.un~ files whenever you edit a file. These files contain undo information so you can undo previous actions even after you close and reopen a file.
+" http://stevelosh.com/blog/2010/09/coming-home-to-vim/#important-vimrc-lines
+set undofile
+set ttyfast
+set scrolloff=3
+set laststatus=2
+
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
@@ -13,6 +20,8 @@ set incsearch		" do incremental searching
 "set ignorecase
 "set smartcase
 set autoindent
+nnoremap <tab> %
+vnoremap <tab> %
 
 "set number
 set nowrap
