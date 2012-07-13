@@ -139,6 +139,15 @@ if has("autocmd")
 
   augroup END
 
+  " http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
+  "autocmd BufNew * :set rnu
+  " Unfortunately this doesn't seem to work well. It doesn't run the
+  " InsertLeave command
+  "autocmd InsertEnter * :set number
+  "autocmd InsertLeave * :set relativenumber
+  "autocmd FocusLost * :set number
+  "autocmd FocusGained * :set relativenumber
+
 else
 
   set autoindent		" always set autoindenting on
@@ -327,7 +336,17 @@ endfunction
 
 nmap <silent> <leader>= :call Preserve("normal gg=G")<CR>
 nnoremap <silent> <leader>W :call Preserve("%s/\\s\\+$//e")<CR>
-autocmd BufWritePre *.py,*.js,*.rb,*.coffee :call Preserve("%s/\\s\\+$//e")
+autocmd BufWritePre *.py,*.js,*.rb,*.coffee,*.clj,*.cljs :call Preserve("%s/\\s\\+$//e")
+
+" Settings for VimClojure
+let vimclojure#HighlightBuiltins = 1
+let vimclojure#ParenRainbow = 1
+
+" Settings for vim-slime
+let g:slime_no_mappings=1
+xmap <leader>os <Plug>SlimeRegionSend
+nmap <leader>os <Plug>SlimeParagraphSend
+nmap <leader>oV <Plug>SlimeConfig
 
 " Settings for Specky
 " see :help specky
