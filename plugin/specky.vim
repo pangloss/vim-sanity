@@ -9,20 +9,20 @@
 " Hook up the functions to the user supplied key bindings. {{{
 "
 if exists( 'g:speckySpecSwitcherKey' )
-	execute 'map ' . g:speckySpecSwitcherKey . ' :call <SID>SpecSwitcher()<CR>'
-"	map &g:speckySpecSwitcherKey <SID>SpecSwitcher()
+	execute 'nmap ' . g:speckySpecSwitcherKey . ' :call <SID>SpecSwitcher()<CR>'
+"	nmap &g:speckySpecSwitcherKey <SID>SpecSwitcher()
 endif
 
 if exists( 'g:speckyQuoteSwitcherKey' )
-	execute 'map ' . g:speckyQuoteSwitcherKey . ' :call <SID>QuoteSwitcher()<CR>'
+	execute 'nmap ' . g:speckyQuoteSwitcherKey . ' :call <SID>QuoteSwitcher()<CR>'
 endif
 
 if exists( 'g:speckyRunSpecKey' )
-	execute 'map ' . g:speckyRunSpecKey . ' :call <SID>RunSpec()<CR>'
+	execute 'nmap ' . g:speckyRunSpecKey . ' :call <SID>RunSpec()<CR>'
 endif
 
 if exists( 'g:speckyRunRdocKey' )
-	execute 'map ' . g:speckyRunRdocKey . ' :call <SID>RunRdoc()<CR>'
+	execute 'nmap ' . g:speckyRunRdocKey . ' :call <SID>RunRdoc()<CR>'
 endif
 
 if exists( 'specky_loaded' )
