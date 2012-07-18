@@ -44,7 +44,6 @@ set hid
 " Set encoding
 set encoding=utf-8
 
-" Toggle the ProjecDTreeToggleth \p
 nmap <silent> <Leader>p :NERDTreeToggle<CR>
 
 " CTags
@@ -351,3 +350,12 @@ let g:speckyQuoteSwitcherKey = "<C-S>'"
 let g:speckySpecSwitcherKey  = "<C-S>s"
 let g:speckyRunSpecKey       = "<C-S>r"
 let g:speckyWindowType       = 2
+
+" http://sjl.bitbucket.org/gundo.vim/
+nnoremap <LocalLeader>u :GundoToggle<CR>
+nnoremap <F5> :GundoToggle<CR>
+
+" http://www.vim.org/scripts/script.php?script_id=1234
+let g:yankring_history_file = '.yankring_history'
+let g:yankring_zap_keys = 'ƒ †'
+
