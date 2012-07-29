@@ -359,3 +359,5 @@ nnoremap <F5> :GundoToggle<CR>
 let g:yankring_history_file = '.yankring_history'
 let g:yankring_zap_keys = 'ƒ †'
 
+au FileType clojure inoremap <silent><C-d> <left><C-o>:call SlimvEvalDefun()<CR><right>
+au FileType clojure inoremap <silent><C-e> <left><C-o>:call SlimvEvalExp()<CR><right>
