@@ -1,3 +1,4 @@
+
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
@@ -107,12 +108,7 @@ map <silent> <Leader><C-f> <Plug>SimpleFold_Foldsearch
 if &t_Co > 2 || has("gui_running")
   syntax on
 endif
-if has("gui_running")
-  "color slate
-  color railscat
-else
-  color default
-endif
+color railscat
 
 
 " Only do this part when compiled with support for autocommands.
@@ -361,3 +357,8 @@ let g:yankring_zap_keys = 'ƒ †'
 
 au FileType clojure inoremap <silent><C-d> <left><C-o>:call SlimvEvalDefun()<CR><right>
 au FileType clojure inoremap <silent><C-e> <left><C-o>:call SlimvEvalExp()<CR><right>
+
+
+" Command-T
+let g:CommandTMaxHeight=20
+map <silent> <D-t> :CommandT<CR>

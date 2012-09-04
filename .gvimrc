@@ -186,3 +186,8 @@ endfunction
 " Define the NERDTree-aware aliases
 call s:DefineCommand("Cd", "ChangeDirectory")
 
+" Command-T
+if has("gui_macvim")
+  macmenu File.New\ Tab key=<nop>
+  macmenu &File.New\ Tab key=<nop>
+endif
