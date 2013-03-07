@@ -46,6 +46,7 @@ set hid
 set encoding=utf-8
 
 nmap <silent> <Leader>p :NERDTreeToggle<CR>
+nmap <silent> <Leader>f :NERDTreeFind<CR>
 
 " CTags
 "map <Leader>rt :!ctags --extra=+f -R *<CR><CR>
@@ -108,7 +109,7 @@ map <silent> <Leader><C-f> <Plug>SimpleFold_Foldsearch
 if &t_Co > 2 || has("gui_running")
   syntax on
 endif
-color railscat
+color slate
 
 
 " Only do this part when compiled with support for autocommands.
@@ -177,6 +178,15 @@ map <C-l> <C-w>l
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
+
+"<M-l>
+map ¬ <C-w>l<C-w>_<C-w>6-
+"<M-h>
+map ˙ <C-w>h<C-w>_<C-w>6-
+"<M-j>
+map ∆ <C-w>j<C-w>_<C-w>6-
+"<M-k>
+map ˚ <C-w>k<C-w>_<C-w>6-
 
 " Below, I uncerimoniously copy stuff from
 " git://github.com/jferris/config_files.git
@@ -294,7 +304,7 @@ au BufRead,BufNewFile {Gemfile,Rakefile,Thorfile,config.ru}    set ft=ruby
 au BufNewFile,BufRead *.dust set filetype=html
 
 function! s:setupWrapping()
-  set wrap
+  "set wrap
   set wm=2
   set textwidth=72
 endfunction
@@ -351,10 +361,6 @@ let g:speckyWindowType       = 2
 nnoremap <LocalLeader>u :GundoToggle<CR>
 nnoremap <F5> :GundoToggle<CR>
 
-" http://www.vim.org/scripts/script.php?script_id=1234
-let g:yankring_history_file = '.yankring_history'
-let g:yankring_zap_keys = 'ƒ †'
-
 au FileType clojure inoremap <silent><C-d> <left><C-o>:call SlimvEvalDefun()<CR><right>
 au FileType clojure inoremap <silent><C-e> <left><C-o>:call SlimvEvalExp()<CR><right>
 
@@ -362,3 +368,11 @@ au FileType clojure inoremap <silent><C-e> <left><C-o>:call SlimvEvalExp()<CR><r
 " Command-T
 let g:CommandTMaxHeight=20
 map <silent> <D-t> :CommandT<CR>
+
+
+" Delimit sentences with 2 spaces
+set cpo+=J
+
+" VimClojure options
+let g:clojure_align_multiline_strings = 1
+let g:clojure_maxlines = 200
