@@ -1,22 +1,10 @@
-" An example for a gvimrc file.
-" The commands in this are executed when the GUI is started.
-"
-" Maintainer:	Bram Moolenaar <Bram@vim.org>
-" Last change:	2001 Sep 02
-"
-" To use it, copy it to
-"     for Unix and OS/2:  ~/.gvimrc
-"	      for Amiga:  s:.gvimrc
-"  for MS-DOS and Win32:  $VIM\_gvimrc
-"	    for OpenVMS:  sys$login:.gvimrc
-
 " Make external commands work through a pipe instead of a pseudo-tty
 "set noguipty
 
 " set the X11 font to use
 " set guifont=-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1
-" set guifont=DejaVu\ Sans\ Mono:h11
-set guifont=Anonymous\ Pro:h14
+set guifont=DejaVu\ Sans\ Mono:h11
+" set guifont=Anonymous\ Pro:h14
 
 set ch=1		" Make command line x lines high
 
@@ -54,6 +42,8 @@ set guioptions=aec
 set columns=300
 set lines=3000
 color railscat
+
+set noballooneval
 
 if has("gui_macvim")
   " Fullscreen takes up entire screen

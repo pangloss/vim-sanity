@@ -155,6 +155,10 @@ endif " has("autocmd")
 
 let g:SimpleFold_use_subfolds = 0
 
+" Default is 100 but larger defrecords often are larger and if you hit
+" this limit it misbehaves badly.
+let g:paredit_matchlines = 300
+
 " Up/down key behaviour {{{1
 " -- Changes up/down arrow keys to behave screen-wise, rather than file-wise.
 "    Behaviour is unchanged in operator-pending mode.
@@ -350,7 +354,6 @@ autocmd BufWritePre *.py,*.js,*.rb,*.coffee,*.clj,*.cljs :call Preserve("%s/\\s\
 let vimclojure#HighlightBuiltins = 1
 let vimclojure#ParenRainbow = 1
 
-" TODO: update this plugin: http://www.vim.org/scripts/script.php?script_id=2286
 " Settings for Specky
 " see :help specky
 let g:speckyQuoteSwitcherKey = "<C-S>'"
@@ -377,3 +380,13 @@ set cpo+=J
 " VimClojure options
 let g:clojure_align_multiline_strings = 1
 let g:clojure_maxlines = 200
+
+" My multicursor settings... delete if switch to vim-multiple-cursors is permanent.
+" nnoremap <leader>ma :<c-u>call MultiCursorPlaceCursor()<cr>
+" nnoremap <leader>mm :<c-u>call MultiCursorManual()<cr>
+" nnoremap <leader>mc :<c-u>call MultiCursorRemoveCursors()<cr>
+" xnoremap <leader>mv :<c-u>call MultiCursorVisual()<cr>
+" nnoremap <leader>ms :<c-u>call MultiCursorSearch('')<cr>
+" nnoremap <leader>mw :<c-u>call MultiCursorSearch('<c-r><c-w>')<cr>
+" xnoremap <leader>ms "*y<Esc>:call MultiCursorSearch('<c-r>=substitute(escape(@*, '\/.*$^~[]'), "\n", '\\n', "g")<cr>')<cr>
+" let g:multicursor_quit = "<leader>mx"
