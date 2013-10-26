@@ -350,6 +350,7 @@ autocmd BufWritePre *.py,*.js,*.rb,*.coffee,*.clj,*.cljs :call Preserve("%s/\\s\
 let vimclojure#HighlightBuiltins = 1
 let vimclojure#ParenRainbow = 1
 
+" TODO: update this plugin: http://www.vim.org/scripts/script.php?script_id=2286
 " Settings for Specky
 " see :help specky
 let g:speckyQuoteSwitcherKey = "<C-S>'"
