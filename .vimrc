@@ -11,7 +11,7 @@ set modelines=0
 " http://stevelosh.com/blog/2010/09/coming-home-to-vim/#important-vimrc-lines
 set undofile
 set ttyfast
-set scrolloff=3
+set scrolloff=20
 set laststatus=2
 
 " allow backspacing over everything in insert mode
@@ -293,6 +293,7 @@ endif
 set completeopt=longest,menu
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.rbc
+set wildignore+=target,out
 set complete=.,t
 
 " Key to echo the next function
@@ -310,7 +311,7 @@ au BufNewFile,BufRead *.dust set filetype=html
 function! s:setupWrapping()
   "set wrap
   set wm=2
-  set textwidth=72
+  set textwidth=150
 endfunction
 
 function! s:setupMarkup()
@@ -365,9 +366,8 @@ let g:speckyWindowType       = 2
 nnoremap <LocalLeader>u :GundoToggle<CR>
 nnoremap <F5> :GundoToggle<CR>
 
-au FileType clojure inoremap <silent><C-d> <left><C-o>:call SlimvEvalDefun()<CR><right>
-au FileType clojure inoremap <silent><C-e> <left><C-o>:call SlimvEvalExp()<CR><right>
-
+" Slamhound - defines/cleans up namespace declarations in Clojure
+nnoremap <LocalLeader>sh :Slamhound<CR>
 
 " Command-T
 let g:CommandTMaxHeight=20
