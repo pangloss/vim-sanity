@@ -183,5 +183,8 @@ if has("gui_macvim")
   macmenu &File.New\ Tab key=<nop>
 endif
 
+if exists("g:clojure_fuzzy_indent_patterns") == 0
+  let g:clojure_fuzzy_indent_patterns = []
+endif
 let g:clojure_fuzzy_indent_patterns = g:clojure_fuzzy_indent_patterns + ["^apply"]
 
