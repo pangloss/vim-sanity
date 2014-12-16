@@ -21,7 +21,7 @@
 	url = git://github.com/tpope/vim-classpath.git
 [submodule "bundle/vim-clojure-static"]
 	path = bundle/vim-clojure-static
-	url = git://github.com/guns/vim-clojure-static.git
+	url = git://github.com/pangloss/vim-clojure-static.git
 [submodule "bundle/vim-dispatch"]
 	path = bundle/vim-dispatch
 	url = https://github.com/tpope/vim-dispatch.git
